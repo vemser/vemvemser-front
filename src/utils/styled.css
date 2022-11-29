@@ -8,13 +8,26 @@ body {
   background-color: #1f64ff;
 }
 
+:root {
+  --white: #eff1f6;
+}
+
 .home-background {
   background-image: linear-gradient(
       360deg,
       rgba(58, 58, 58, 0.6) 0%,
       rgba(0, 0, 0, 0) 100%
     ),
-    url("../assets/home-background.jpg");
-    background-position: center;
-    background-size: cover;
+    url("../assets/home-background.webp");
+  background-position: center;
+  background-size: cover;
+}
+
+.MuiDataGrid-row {
+  cursor: pointer;
+}
+
+.MuiDataGrid-selectedRowCount,
+.MuiDataGrid-footerContainer {
+  display: none !important;
 }

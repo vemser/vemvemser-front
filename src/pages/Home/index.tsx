@@ -7,10 +7,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ILogin } from "../../utils/interfaces";
+import { loginSchema } from "../../utils/schemas";
+import { useEffect } from "react";
+import { useManager } from "../../context/ManagerContext";
 import logoDbc from "../../assets/logo-white.svg";
 
-export const Home = () => {
+export const Home: React.FC = () => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    token && navigate("/dashboard");
+  }, []);
+  const navigate = useNavigate();
+
+  const { handleUserlogin } = useManager();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ILogin>({
+    // resolver: yupResolver(loginSchema),
+  });
+
+  const handleLogin = (data: ILogin) => {
+    handleUserlogin(data);
+  };
+
   return (
     <Container
       maxWidth="lg"
@@ -62,26 +88,34 @@ export const Home = () => {
               flexDirection="column"
               justifyContent="center"
             >
-              <Stack spacing={2} component="form" id="login">
+              <Stack
+                spacing={2}
+                component="form"
+                id="login"
+                onSubmit={handleSubmit(handleLogin)}
+              >
                 <TextField
-                  type="email"
-                  id="email"
+                  id="home-email"
+                  error={!!errors.email}
                   label="Email"
                   variant="filled"
                   helperText="Digite seu email"
+                  {...register("email")}
                 />
                 <TextField
                   label="Senha"
                   type="password"
-                  id="password"
+                  id="home-senha"
+                  error={!!errors.senha}
                   variant="filled"
                   helperText="Digite sua senha"
+                  {...register("senha")}
                 />
                 <Button
-                  type="submit"
                   variant="contained"
                   color="primary"
-                  id="btn-login"
+                  id="home-entrar"
+                  type="submit"
                 >
                   Entrar
                 </Button>
@@ -116,7 +150,7 @@ export const Home = () => {
                 </Typography>
                 <Button
                   component={Link}
-                  to="/"
+                  to="/register"
                   variant="contained"
                   id="register"
                 >
