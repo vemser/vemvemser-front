@@ -26,7 +26,8 @@ export const stepOneSchema = yup.object().shape({
   rg: yup
     .string()
     .required("RG obrigatório")
-    .min(8, "O RG precisa ter no mínimo 8 caracteres"),
+    .min(8, "O RG precisa ter no mínimo 8 caracteres")
+    .max(12, "O RG precisa ter no máximo 9 caracteres"),
   estado: yup.string().required("Estado obrigatório"),
   cidade: yup
     .string()

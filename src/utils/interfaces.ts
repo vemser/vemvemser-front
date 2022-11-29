@@ -1,3 +1,5 @@
+export type TBoolean = "T" | "F";
+
 export interface ILogin {
   email: string;
   senha: string;
@@ -11,9 +13,9 @@ export interface ICandidateForm {
   estado: string;
   cidade: string;
   cpf: string;
+  genero: string;
+  pcd: TBoolean;
 }
-
-export type TBoolean = "T" | "F";
 
 export interface IInscriptionForm {
   matriculado: TBoolean;
@@ -28,7 +30,18 @@ export interface IInscriptionForm {
   resposta: string;
   curriculo: any;
   lgpd: boolean;
-  prova?: TBoolean;
+
+  /*
+ prova: TBoolean;
+ espanhol: string;
+ ingles: string;
+ neurodiversidade: string;
+ config_pc: string;
+ efetivacao: TBoolean;
+ disponibilidade: TBoolean;
+
+ falta: TRILHA
+ */
 }
 
 export interface IDrawerContainerProps {

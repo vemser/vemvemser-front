@@ -7,19 +7,22 @@ import {
   Stack,
   Button,
   Select,
+  FormLabel,
+  Tooltip,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCandidates } from "../../context/CandidatesContext";
 import { ICandidateForm, IStepProps } from "../../utils/interfaces";
 import { states } from "../../utils/states";
-import React from "react";
+import React, { useState } from "react";
 
 import InputMask from "react-input-mask";
 import { stepOneSchema } from "../../utils/schemas";
 
 export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
   const { setFormValues } = useCandidates();
+  const [isPcd, setIsPcd] = useState(false);
 
   const {
     register,
@@ -71,6 +74,68 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
             {errors.nome?.message}
           </Typography>
         </Grid>
+
+        <Grid item xs={6}>
+          <FormLabel component="legend" sx={{ mb: 1 }}>
+            Qual o seu sexo?
+          </FormLabel>
+          <Select
+            native
+            variant="outlined"
+            sx={{ width: "100%" }}
+            id="s1-candidato-genero"
+            {...register("genero")}
+          >
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+            <option value="neutro">Prefiro não informar</option>
+          </Select>
+        </Grid>
+
+        <Grid item xs={6}>
+          <FormLabel component="legend" sx={{ mb: 1 }}>
+            Você possui alguma deficiência?
+          </FormLabel>
+          <Tooltip
+            title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
+            placement="bottom-end"
+            arrow
+          >
+            <Select
+              native
+              variant="outlined"
+              sx={{ width: "100%" }}
+              id="s1-candidato-pcd"
+              onChange={(e) => {
+                e.target.value === "true" ? setIsPcd(true) : setIsPcd(false);
+              }}
+            >
+              <option value="false">Não</option>
+              <option value="true">Sim</option>
+            </Select>
+          </Tooltip>
+        </Grid>
+
+        {isPcd && (
+          <Grid item xs={12}>
+            <Tooltip
+              title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
+              placement="bottom-start"
+              arrow
+            >
+              <TextField
+                sx={{
+                  width: "100%",
+                }}
+                label="Qual a sua deficiência"
+                variant="outlined"
+                id="s1-candidato-pcd-descricao"
+                {...register("pcd")}
+              />
+            </Tooltip>
+          </Grid>
+        )}
+
         <Grid item xs={6}>
           <TextField
             label="Email"
