@@ -13,7 +13,7 @@ export interface ICandidateForm {
   cpf: string;
 }
 
-export type TBoolean = 'T' | 'F';
+export type TBoolean = "T" | "F";
 
 export interface IInscriptionForm {
   matriculado: TBoolean;
@@ -28,6 +28,7 @@ export interface IInscriptionForm {
   resposta: string;
   curriculo: any;
   lgpd: boolean;
+  prova?: TBoolean;
 }
 
 export interface IDrawerContainerProps {
