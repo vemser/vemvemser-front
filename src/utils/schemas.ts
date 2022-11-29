@@ -68,7 +68,10 @@ export const stepTwoSchema = yup.object().shape({
     then: yup.string().required("Preencha o campo com o nome do curso"),
   }),
   github: yup.string(),
-  lgpd: yup.boolean().oneOf([true], "É necessário aceitar os termos"),
+  lgpdBoolean: yup.boolean().oneOf([true], "É necessário aceitar os termos"),
+  configuracoes: yup.string().required("É necessário informar a configuração"),
+  // trilhas tem que selecionar pelo menos um do checkbox
+  trilhas: yup.array().min(1, "É necessário selecionar pelo menos uma trilha"),
 });
 
 export const userSchema = yup.object().shape({

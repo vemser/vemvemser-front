@@ -23,22 +23,24 @@ export interface IInscriptionForm {
   instituicao: string;
   turno: "MANHA" | "TARDE" | "NOITE";
   github: string;
-  desafios: TBoolean;
-  problemas: boolean;
-  reconhecimento: boolean;
-  altruismo: boolean;
+  desafiosBoolean: TBoolean;
+  problemasBoolean: boolean;
+  reconhecimentoBoolean: boolean;
+  altruismoBoolean: boolean;
   resposta: string;
   curriculo: any;
-  lgpd: boolean;
+  lgpdBoolean: boolean;
 
+  provaBoolean: TBoolean;
+  ingles: string;
+  espanhol: string;
+  neurodiversidade: string;
+  efetivacaoBoolean: TBoolean;
+  disponibilidadeBoolean: TBoolean;
+  configuracoes: string;
+  linkedin: string;
+  trilhas: [];
   /*
- prova: TBoolean;
- espanhol: string;
- ingles: string;
- neurodiversidade: string;
- config_pc: string;
- efetivacao: TBoolean;
- disponibilidade: TBoolean;
 
  falta: TRILHA
  */
@@ -62,7 +64,15 @@ export interface IFormCardProps {
 
 export interface ICandidateContext {
   setFormValues: (values: object) => void;
+  getTrilhas: () => void;
+  trilhas: ITrilhas[];
   data: object;
+}
+
+
+export interface ITrilhas {
+  idTrilha: number;
+  nome: string;
 }
 
 export interface IChildren {
