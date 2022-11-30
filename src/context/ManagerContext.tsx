@@ -7,6 +7,8 @@ import {
   IChildren,
   IGestor,
   ILogin,
+  IGestorDados,
+  IGestorElementos,
 } from "../utils/interfaces";
 import nProgress from "nprogress";
 import axios from "axios";
@@ -16,7 +18,7 @@ export const ManagerProvider = ({ children }: IChildren) => {
   const navigate = useNavigate();
 
   const [gestorDadosLogin, setGestorDadosLogin] = useState({});
-  const [gestorDados, setGestorDados] = useState<IGestor[]>([]);
+  const [gestorDados, setGestorDados] = useState<IGestorElementos[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleUserlogin = async (user: ILogin) => {
@@ -53,7 +55,7 @@ export const ManagerProvider = ({ children }: IChildren) => {
     setLoading(true);
     try {
       await axios.get(`${baseurl}/Gestor`).then((response) => {
-        setGestorDados(response.data);
+        setGestorDados(response.data.elementos);
       });
     } catch (error) {
       toast.error("Erro ao buscar usuários");

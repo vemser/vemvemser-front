@@ -31,10 +31,14 @@ export const Dashboard: React.FC = () => {
     getManagers();
   }, []);
 
+  useEffect(() => {
+    console.log(gestorDados);
+  }, [gestorDados]);
+
   const columns = [
     { field: "nome", headerName: "Nome", width: 200 },
-    // { field: "email", headerName: "Email", minWidth: 220, flex: 1 },
-    // { field: "cargo", headerName: "Cargo", width: 120 },
+    { field: "email", headerName: "Email", minWidth: 220, flex: 1 },
+    { field: "cargo", headerName: "Cargo", width: 120 },
   ];
 
   return (
@@ -136,6 +140,8 @@ export const Dashboard: React.FC = () => {
               return {
                 id: gestor.idGestor,
                 nome: gestor.nome,
+                email: gestor.email,
+                cargo: gestor.cargoDto.nome.split("_")[1].toLowerCase(),
               };
             })}
             columns={columns}

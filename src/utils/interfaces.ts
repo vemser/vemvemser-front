@@ -14,36 +14,31 @@ export interface ICandidateForm {
   cidade: string;
   cpf: string;
   genero: string;
-  pcd: TBoolean;
+  pcd: TBoolean | boolean;
 }
 
 export interface IInscriptionForm {
-  matriculado: TBoolean;
+  matriculado: TBoolean | boolean;
   curso: string;
   instituicao: string;
   turno: "MANHA" | "TARDE" | "NOITE";
   github: string;
-  desafiosBoolean: TBoolean;
+  desafiosBoolean: TBoolean | boolean;
   problemasBoolean: boolean;
   reconhecimentoBoolean: boolean;
   altruismoBoolean: boolean;
   resposta: string;
-  curriculo: any;
+  curriculo?: any;
   lgpdBoolean: boolean;
-
-  provaBoolean: TBoolean;
+  provaBoolean: TBoolean | boolean;
   ingles: string;
   espanhol: string;
   neurodiversidade: string;
-  efetivacaoBoolean: TBoolean;
-  disponibilidadeBoolean: TBoolean;
+  efetivacaoBoolean: TBoolean | boolean;
+  disponibilidadeBoolean: TBoolean | boolean;
   configuracoes: string;
   linkedin: string;
   trilhas: [];
-  /*
-
- falta: TRILHA
- */
 }
 
 export interface IDrawerContainerProps {
@@ -65,10 +60,13 @@ export interface IFormCardProps {
 export interface ICandidateContext {
   setFormValues: (values: object) => void;
   getTrilhas: () => void;
+  postFormulario: (
+    formulario: IInscriptionForm,
+    candidato: ICandidateForm
+  ) => void;
   trilhas: ITrilhas[];
-  data: object;
+  data: IInscriptionForm & ICandidateForm;
 }
-
 
 export interface ITrilhas {
   idTrilha: number;
@@ -87,6 +85,34 @@ export interface IGestor {
   idGestor?: number;
 }
 
+export interface IGestorDados {
+  totalElementos: number;
+  quantidadePaginas: number;
+  pagina: number;
+  tamanho: 0;
+  elementos: [
+    {
+      idGestor: number;
+      nome: string;
+      email: string;
+      cargoDto: {
+        idCargo: number;
+        nome: string;
+      };
+    }
+  ];
+}
+
+export interface IGestorElementos {
+  idGestor: number;
+  nome: string;
+  email: string;
+  cargoDto: {
+    idCargo: number;
+    nome: string;
+  };
+}
+
 export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
 
 export interface IUser extends IGestor {
@@ -100,5 +126,5 @@ export interface IManagerContext {
   deleteManager: (idManager: number) => Promise<void>;
   gestorDadosLogin: object;
   loading: boolean;
-  gestorDados: IGestor[];
+  gestorDados: IGestorElementos[];
 }
