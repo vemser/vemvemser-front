@@ -18,11 +18,12 @@ export interface ICandidateForm {
   estado: string;
   cidade: string;
   cpf: string;
-  genero: string;
   pcd: TBoolean;
 }
 
 export interface IInscriptionForm {
+  genero: string;
+  orientacao: string;
   matriculadoBoolean: TBoolean;
   curso: string;
   instituicao: string;
@@ -33,7 +34,7 @@ export interface IInscriptionForm {
   reconhecimentoBoolean: boolean;
   altruismoBoolean: boolean;
   resposta: string;
-  curriculo: any;
+  curriculo?: any;
   lgpdBoolean: boolean;
 
   provaBoolean: TBoolean;
@@ -45,10 +46,6 @@ export interface IInscriptionForm {
   configuracoes: string;
   linkedin: string;
   trilhas: [];
-  /*
-
- falta: TRILHA
- */
 }
 
 export interface IDrawerContainerProps {
@@ -71,7 +68,8 @@ export interface ICandidateContext {
   setFormValues: (values: object) => void;
   getTrilhas: () => void;
   trilhas: ITrilhas[];
-  data: object;
+  data: IInscriptionForm & ICandidateForm;
+  createCandidate: (formulario: IInscriptionForm, candidato: ICandidateForm) => Promise<void>
 }
 
 export interface ITrilhas {
@@ -109,7 +107,6 @@ export interface ILoginDados {
     nome: string;
   };
 }
-
 
 export interface ITabelaGestorPage {
   totalPages: number;

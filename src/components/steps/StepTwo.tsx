@@ -62,6 +62,9 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
       ])
     );
 
+    const trilhas = formValues.trilhas.map((trilha: string) => Number(trilha));
+    formValues.trilhas = trilhas;
+
     if (curriculoIsPdf) {
       const reader = new FileReader();
       reader.readAsDataURL(curriculo[0]);
@@ -256,7 +259,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
               </Select>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Tooltip
                 title="Algumas das neurodiversidades que podem ser consideradas são: TEA, TDAH, Altas Habilidades etc."
                 placement="bottom-start"
@@ -299,6 +302,62 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
                 />
               </Grid>
             )}
+
+            <Grid item xs={12} md={3}>
+              <Tooltip
+                title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
+                placement="bottom-start"
+                arrow
+              >
+                <Box>
+                  <FormLabel component="legend" sx={{ mb: 1 }}>
+                    Qual a sua orientação sexual?
+                  </FormLabel>
+                  <Select
+                    native
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    id="s2-candidato-orientacao"
+                    {...register("orientacao")}
+                  >
+                    <option value="heterossexual">Heterossexual</option>
+                    <option value="homossexual">Homossexual</option>
+                    <option value="bissexual">Bissexual</option>
+                    <option value="pansexual">Pansexual</option>
+                    <option value="outro">Outro</option>
+                    <option value="naoInformar">Prefiro não informar</option>
+                  </Select>
+                </Box>
+              </Tooltip>
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <Tooltip
+                title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
+                placement="bottom-start"
+                arrow
+              >
+                <Box>
+                  <FormLabel component="legend" sx={{ mb: 1 }}>
+                    Qual a seu gênero?
+                  </FormLabel>
+                  <Select
+                    native
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    id="s2-candidato-orientacao"
+                    {...register("genero")}
+                  >
+                    <option value="cisgenero">Homem cisgênero</option>
+                    <option value="transgenero">Homem transgênero</option>
+                    <option value="mulherCisgenero">Mulher cisgênero</option>
+                    <option value="mulherCisgenero">Mulher transgênero</option>
+                    <option value="naoBinario">Não binário</option>
+                    <option value="naoInformado">Prefiro não informar</option>
+                  </Select>
+                </Box>
+              </Tooltip>
+            </Grid>
 
             <Grid item xs={12}>
               <Stack direction="column">

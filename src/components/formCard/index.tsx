@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   AlertTitle,
 } from "@mui/material";
 import { useCandidates } from "../../context/CandidatesContext";
-import { IFormCardProps } from "../../utils/interfaces";
+import { IFormCardProps, IInscriptionForm } from "../../utils/interfaces";
 
 const steps: string[] = [
   "Informações Cadastrais",
@@ -32,10 +32,16 @@ export const FormCard = ({
               {steps[currentStep]}
             </Typography>
           </Box>
-          <Stepper activeStep={currentStep} sx={{ my: 2, alignItems: {
-            xs: "flex-start",
-            lg: "center",
-          } }}>
+          <Stepper
+            activeStep={currentStep}
+            sx={{
+              my: 2,
+              alignItems: {
+                xs: "flex-start",
+                lg: "center",
+              },
+            }}
+          >
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel
@@ -57,7 +63,7 @@ export const FormCard = ({
             ))}
           </Stepper>
 
-          {currentStep > 0 && currentStep < 2 && (
+          {currentStep > 0 && currentStep < 3 && (
             <Button onClick={prevFormStep} variant="outlined" sx={{ mb: 2 }}>
               Voltar
             </Button>
@@ -69,9 +75,62 @@ export const FormCard = ({
   );
 };
 
+/*
+candidato:
+nome: string;
+  email: string;
+  telefone: string;
+  rg: string;
+  estado: string;
+  cidade: string;
+  cpf: string;
+  pcd: TBoolean;
+
+*/
+
 export const FormCompleted = () => {
-  const { data } = useCandidates();
-  console.log(data)
+  const { data, createCandidate } = useCandidates();
+
+  const formulario = {
+    matriculadoBoolean: data.matriculadoBoolean,
+    curso: data.curso,
+    instituicao: data.instituicao,
+    turno: data.turno,
+    github: data.github,
+    desafiosBoolean: data.desafiosBoolean,
+    problemasBoolean: data.problemasBoolean,
+    reconhecimentoBoolean: data.reconhecimentoBoolean,
+    altruismoBoolean: data.altruismoBoolean,
+    resposta: data.resposta,
+    lgpdBoolean: data.lgpdBoolean,
+    provaBoolean: data.provaBoolean,
+    ingles: data.ingles,
+    espanhol: data.espanhol,
+    neurodiversidade: data.neurodiversidade,
+    efetivacaoBoolean: data.efetivacaoBoolean,
+    disponibilidadeBoolean: data.disponibilidadeBoolean,
+    configuracoes: data.configuracoes,
+    linkedin: data.linkedin,
+    trilhas: data.trilhas,
+    genero: data.genero,
+    orientacao: data.orientacao,
+  };
+
+  const candidato = {
+    nome: data.nome,
+    email: data.email,
+    telefone: data.telefone,
+    rg: data.rg,
+    estado: data.estado,
+    cidade: data.cidade,
+    cpf: data.cpf,
+    pcd: data.pcd,
+  };
+
+  useEffect(() => {
+    createCandidate(formulario, candidato);
+    console.log(candidato)
+  }, []);
 
   return (
     <Alert
