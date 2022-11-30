@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Radio } from "../../utils/theme";
 import { useForm } from "react-hook-form";
-import { IGestor, IGestorDados } from "../../utils/interfaces";
+import { IGestor } from "../../utils/interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userEditSchema } from "../../utils/schemas";
 import { useLocation } from "react-router-dom";
@@ -22,7 +22,7 @@ import { useState } from "react";
 
 export const EditUser: React.FC = () => {
   const { state } = useLocation();
-  const { deleteManager, editManager } = useManager();
+  const { gestorLogado, deleteManager, editManager } = useManager();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -96,43 +96,45 @@ export const EditUser: React.FC = () => {
               {errors.email?.message}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <FormLabel component="legend" sx={{ mb: 1, ml: 1 }}>
-              Qual cargo o usuário irá exercer?
-            </FormLabel>
-            <Stack direction="row" spacing={2}>
-              <FormLabel
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  ml: 1,
-                }}
-              >
-                <Radio
-                  type="radio"
-                  value={2}
-                  id="editar-usuario-colaborador"
-                  {...register("tipoCargo")}
-                />
-                Colaborador
+          {gestorLogado?.cargoDto?.idCargo === 1 && (
+            <Grid item xs={12} md={6}>
+              <FormLabel component="legend" sx={{ mb: 1, ml: 1 }}>
+                Qual cargo o usuário irá exercer?
               </FormLabel>
-              <FormLabel
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  ml: 1,
-                }}
-              >
-                <Radio
-                  type="radio"
-                  value={1}
-                  id="editar-usuario-administrador"
-                  {...register("tipoCargo")}
-                />
-                Administrador
-              </FormLabel>
-            </Stack>
-          </Grid>
+              <Stack direction="row" spacing={2}>
+                <FormLabel
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    ml: 1,
+                  }}
+                >
+                  <Radio
+                    type="radio"
+                    value={2}
+                    id="editar-usuario-colaborador"
+                    {...register("tipoCargo")}
+                  />
+                  Colaborador
+                </FormLabel>
+                <FormLabel
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    ml: 1,
+                  }}
+                >
+                  <Radio
+                    type="radio"
+                    value={1}
+                    id="editar-usuario-administrador"
+                    {...register("tipoCargo")}
+                  />
+                  Administrador
+                </FormLabel>
+              </Stack>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <Button
@@ -145,17 +147,19 @@ export const EditUser: React.FC = () => {
               >
                 confirmar edição
               </Button>
-              <Button
-                variant="contained"
-                color="error"
-                id="editar-usuario-exccluir"
-                sx={{
-                  width: { xs: "100%", sm: "fit-content" },
-                }}
-                onClick={handleClickOpen}
-              >
-                Excluir usuário
-              </Button>
+              {gestorLogado?.cargoDto?.idCargo === 1 && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  id="editar-usuario-exccluir"
+                  sx={{
+                    width: { xs: "100%", sm: "fit-content" },
+                  }}
+                  onClick={handleClickOpen}
+                >
+                  Excluir usuário
+                </Button>
+              )}
               <Dialog
                 open={open}
                 onClose={handleClose}

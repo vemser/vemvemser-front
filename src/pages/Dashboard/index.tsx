@@ -16,15 +16,17 @@ import { IGestorDados, ISearchColaborators } from "../../utils/interfaces";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
+import { useAuth } from "../../context/AuthContext";
 
 export const Dashboard: React.FC = () => {
   const { register, handleSubmit, watch } = useForm<ISearchColaborators>();
   const navigate = useNavigate();
   const { nome, email } = watch();
-  const { loading, pageDados, gestorDados, getManagers } = useManager();
+  const { loading, pageDados, gestorDados, gestorLogado, getManagers } = useManager();
 
   const handleSearch = (data: ISearchColaborators) => {
     console.log(data);
+    console.log(gestorLogado);
   };
 
   useEffect(() => {
@@ -136,7 +138,7 @@ export const Dashboard: React.FC = () => {
           </Box>
         ) : (
           <DataGrid
-            rows={gestorDados?.map((gestor: IGestorDados ) => {
+            rows={gestorDados?.map((gestor: IGestorDados) => {
               return {
                 id: gestor.idGestor,
                 nome: gestor.nome,
@@ -148,7 +150,7 @@ export const Dashboard: React.FC = () => {
             columns={columns}
             pageSize={10}
             hideFooterPagination
-            onRowClick={(params) => {
+            onRowClick={async (params) => {
               navigate(`/dashboard/edit-user`, {
                 state: params.row,
               });
@@ -169,18 +171,20 @@ export const Dashboard: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Button
-            variant="contained"
-            onClick={() => navigate("/dashboard/new-user")}
-            sx={{
-              width: {
-                xs: "100%",
-                md: "fit-content",
-              },
-            }}
-          >
-            Novo usuário
-          </Button>
+          {gestorLogado?.cargoDto?.idCargo === 1 && (
+            <Button
+              variant="contained"
+              onClick={() => navigate("/dashboard/new-user")}
+              sx={{
+                width: {
+                  xs: "100%",
+                  md: "fit-content",
+                },
+              }}
+            >
+              Novo usuário
+            </Button>
+          )}
           <Pagination
             count={pageDados?.totalPages}
             color="primary"

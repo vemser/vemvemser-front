@@ -18,9 +18,10 @@ import { useAuth } from "../../context/AuthContext";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { auth, token } = useAuth();
+  const { auth } = useAuth();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       navigate("/dashboard");
     } else {

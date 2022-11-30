@@ -4,20 +4,26 @@ import { baseurl } from "../utils/baseurl";
 import { useNavigate } from "react-router-dom";
 import nProgress from "nprogress";
 import axios from "axios";
-import { IAuthContext, IChildren, ILogin } from "../utils/interfaces";
+import {
+  IAuthContext,
+  IChildren,
+  ILogin,
+  ILoginDados,
+} from "../utils/interfaces";
 
 export const ManagerContext = createContext({} as IAuthContext);
 
 export const AuthProvider = ({ children }: IChildren) => {
-  const [token, setToken] = useState("");
+  const [loginDados, setLoginDados] = useState<ILoginDados>({} as ILoginDados);
+
   const navigate = useNavigate();
 
   const auth = async (values: ILogin) => {
     try {
       nProgress.start();
       await axios.post(`${baseurl}/auth/login`, values).then((res) => {
-        setToken(res.data);
-        localStorage.setItem("token", res.data);
+        setLoginDados(res.data);
+        localStorage.setItem("token", res.data.token);
         navigate("/dashboard");
       });
     } catch (error: any) {
@@ -28,7 +34,7 @@ export const AuthProvider = ({ children }: IChildren) => {
   };
 
   return (
-    <ManagerContext.Provider value={{ auth, token }}>
+    <ManagerContext.Provider value={{ auth, loginDados }}>
       {children}
     </ManagerContext.Provider>
   );

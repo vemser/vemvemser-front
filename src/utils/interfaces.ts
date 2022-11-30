@@ -7,7 +7,7 @@ export interface ILogin {
 
 export interface IAuthContext {
   auth: (values: ILogin) => Promise<void>;
-  token: string;
+  loginDados: ILoginDados;
 }
 
 export interface ICandidateForm {
@@ -100,6 +100,16 @@ export interface IGestorDados {
   };
 }
 
+export interface ILoginDados {
+  token: string;
+  idGestor: number;
+  cargoDto: {
+    idCargo: number;
+    nome: string;
+  };
+}
+
+
 export interface ITabelaGestorPage {
   totalPages: number;
   atualPage: number;
@@ -120,4 +130,5 @@ export interface IManagerContext {
   loading: boolean;
   gestorDados: IGestorDados[];
   pageDados: ITabelaGestorPage;
+  gestorLogado: IGestorDados;
 }

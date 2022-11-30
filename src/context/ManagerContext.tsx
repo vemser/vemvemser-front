@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { baseurl } from "../utils/baseurl";
 import { useNavigate } from "react-router-dom";
@@ -11,18 +11,20 @@ import {
 } from "../utils/interfaces";
 import nProgress from "nprogress";
 import axios from "axios";
-import { useAuth } from "./AuthContext";
 
 export const ManagerContext = createContext({} as IManagerContext);
 export const ManagerProvider = ({ children }: IChildren) => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const token = localStorage.getItem("token");
 
   const [gestorDados, setGestorDados] = useState<IGestorDados[]>([]);
   const [pageDados, setPageDados] = useState<ITabelaGestorPage>(
     {} as ITabelaGestorPage
   );
   const [loading, setLoading] = useState(false);
+  const [gestorLogado, setGestorLogado] = useState<IGestorDados>(
+    {} as IGestorDados
+  );
 
   const createNewManager = async (manager: IGestor) => {
     nProgress.start();
@@ -114,6 +116,29 @@ export const ManagerProvider = ({ children }: IChildren) => {
     }
   };
 
+  const loggedManager = async () => {
+    nProgress.start();
+    try {
+      axios
+        .get(`${baseurl}/gestor/gestor-logado`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setGestorLogado(response.data);
+        });
+    } catch (error) {
+      toast.error("Erro ao buscar usuário logado");
+    } finally {
+      nProgress.done();
+    }
+  };
+
+  useEffect(() => {
+    loggedManager();
+  }, [token]);
+
   return (
     <ManagerContext.Provider
       value={{
@@ -124,6 +149,7 @@ export const ManagerProvider = ({ children }: IChildren) => {
         gestorDados,
         loading,
         pageDados,
+        gestorLogado,
       }}
     >
       {children}
