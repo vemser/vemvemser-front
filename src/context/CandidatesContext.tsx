@@ -18,7 +18,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     {} as IInscriptionForm & ICandidateForm
   );
   const [trilhas, setTrilhas] = useState<ITrilhas[]>([]);
-  const [idForm, setIdForm] = useState<number>(0);
 
   const setFormValues = (values: object) => {
     setData((prevValues: any) => ({
@@ -42,7 +41,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
 
   const createCandidate = async (
     formulario: IInscriptionForm,
-    candidato: ICandidateForm
+    candidato: ICandidateForm,
   ) => {
     nProgress.start();
     try {
@@ -53,7 +52,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         )
         .then((response) => {
           const idFormulario = response.data.idFormulario;
-          setIdForm(idFormulario);
+          localStorage.setItem("idFormulario", idFormulario);
 
           axios
             .post(`${baseurl}/candidato/cadastro`, {
@@ -80,17 +79,26 @@ export const CandidatesProvider = ({ children }: IChildren) => {
   const updateCurriculo = (idFormulario: number, curriculo: any) => {
     nProgress.start();
     try {
+      const formData = new FormData();
+      formData.append("file", curriculo);
+
       axios
-        .put(
-          `${baseurl}/formulario/update-curriculo-by-id-formulario/${idFormulario}`,
-          curriculo
-        )
+        .post(`${baseurl}/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then(() => {
-          console.log("curriculo atualizado");
+          toast.success("Seu currículo foi enviado com sucesso!");
+          nProgress.done();
+        })
+        .catch((err) => {
+          // toast.error(err.response?.data?.errors[0]);
+          console.log(err);
           nProgress.done();
         });
     } catch (error) {
-      toast.error("Erro ao atualizar currículo");
+      console.log(error);
     } finally {
       nProgress.done();
     }
@@ -105,7 +113,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         updateCurriculo,
         data,
         trilhas,
-        idForm,
       }}
     >
       {children}

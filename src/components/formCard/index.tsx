@@ -76,7 +76,7 @@ export const FormCard = ({
 };
 
 export const FormCompleted = () => {
-  const { data, idForm, createCandidate, updateCurriculo } = useCandidates();
+  const { data, createCandidate, updateCurriculo } = useCandidates();
 
   const formulario = {
     matriculadoBoolean: data.matriculadoBoolean,
@@ -119,6 +119,13 @@ export const FormCompleted = () => {
 
   useEffect(() => {
     createCandidate(formulario, candidato);
+
+    if (pdf) {
+      const idFormulario: string = localStorage.getItem("idFormulario") || "";
+      updateCurriculo(parseInt(idFormulario), pdf);
+    }
+
+    localStorage.clear();
   }, []);
 
   return (

@@ -74,7 +74,6 @@ export interface ICandidateContext {
     candidato: ICandidateForm
   ) => Promise<void>;
   updateCurriculo: (idFormulario: number, curriculo: any) => void;
-  idForm: number;
 }
 
 export interface ITrilhas {
