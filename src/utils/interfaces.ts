@@ -18,7 +18,7 @@ export interface ICandidateForm {
 }
 
 export interface IInscriptionForm {
-  matriculado: TBoolean | boolean;
+  matriculadoBoolean: TBoolean;
   curso: string;
   instituicao: string;
   turno: "MANHA" | "TARDE" | "NOITE";
@@ -80,30 +80,12 @@ export interface IChildren {
 export interface IGestor {
   nome: string;
   email: string;
-  senha: string;
-  tipoCargo: number;
+  senha?: string;
+  tipoCargo?: number | string;
   idGestor?: number;
 }
 
 export interface IGestorDados {
-  totalElementos: number;
-  quantidadePaginas: number;
-  pagina: number;
-  tamanho: 0;
-  elementos: [
-    {
-      idGestor: number;
-      nome: string;
-      email: string;
-      cargoDto: {
-        idCargo: number;
-        nome: string;
-      };
-    }
-  ];
-}
-
-export interface IGestorElementos {
   idGestor: number;
   nome: string;
   email: string;
@@ -111,6 +93,12 @@ export interface IGestorElementos {
     idCargo: number;
     nome: string;
   };
+}
+
+export interface ITabelaGestorPage {
+  totalPages: number;
+  atualPage: number;
+  pageSize: number;
 }
 
 export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
@@ -122,9 +110,11 @@ export interface IUser extends IGestor {
 export interface IManagerContext {
   handleUserlogin: (user: ILogin) => Promise<void>;
   createNewManager: (manager: IGestor) => Promise<void>;
-  getManagers: () => Promise<void>;
+  getManagers: (page: number) => Promise<void>
   deleteManager: (idManager: number) => Promise<void>;
+  editManager: (idGestor: number, managerData: IGestor) => Promise<void>;
   gestorDadosLogin: object;
   loading: boolean;
-  gestorDados: IGestorElementos[];
+  gestorDados: IGestorDados[];
+  pageDados: ITabelaGestorPage;
 }

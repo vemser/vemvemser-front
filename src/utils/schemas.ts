@@ -38,7 +38,7 @@ export const stepOneSchema = yup.object().shape({
 export const stepTwoSchema = yup.object().shape({
   resposta: yup
     .string()
-    .when(["altruismo", "reconhecimento", "desafios", "problemas"], {
+    .when(["altruismoBoolean", "reconhecimentoBoolean", "desafiosBoolean", "problemasBoolean"], {
       is: (
         altruismo: boolean,
         reconhecimento: boolean,
@@ -59,13 +59,13 @@ export const stepTwoSchema = yup.object().shape({
         ),
       otherwise: yup.string(),
     }),
-  instituicao: yup.string().when("matriculado", {
-    is: "sim",
-    then: yup.string().required("Preencha o campo com o nome da instituição"),
+  instituicao: yup.string().when("matriculadoBoolean", {
+    is: "T",
+    then: yup.string().min(2, "É necessário 2 caracteres, no mínimo").required("Preencha o campo com o nome da instituição"),
   }),
-  curso: yup.string().when("matriculado", {
-    is: "sim",
-    then: yup.string().required("Preencha o campo com o nome do curso"),
+  curso: yup.string().when("matriculadoBoolean", {
+    is: "T",
+    then: yup.string().min(2, "É necessário 2 caracteres, no mínimo").required("Preencha o campo com o nome do curso"),
   }),
   github: yup.string(),
   lgpdBoolean: yup.boolean().oneOf([true], "É necessário aceitar os termos"),
@@ -97,3 +97,13 @@ export const userSchema = yup.object().shape({
     .oneOf([yup.ref("senha"), null], "As senhas devem ser iguais")
     .required("A confirmação de senha é obrigatória"),
 });
+
+export const userEditSchema = yup.object().shape({
+  nome: yup.string().required("O nome é obrigatório"),
+  email: yup
+    .string()
+    .matches(
+      /^[\w-.]+@dbccompany.com.br$/,
+      "Só é válido o email com @dbccompany.com.br"
+    ),
+})

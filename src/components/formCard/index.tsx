@@ -79,7 +79,7 @@ export const FormCompleted = () => {
   const { data, postFormulario } = useCandidates();
 
   const formulario: IInscriptionForm = {
-    matriculado: data?.matriculado,
+    matriculadoBoolean: data?.matriculadoBoolean,
     curso: data.curso,
     instituicao: data.instituicao,
     turno: data.turno,
