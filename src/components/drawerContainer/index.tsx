@@ -16,6 +16,7 @@ import { IDrawerContainerProps } from "../../utils/interfaces";
 import { menuItems } from "../../utils/menuItems";
 import { CaretLeft, List as ListIcon } from "phosphor-react";
 import logoDbc from "../../assets/logo-blue.svg";
+import { useManager } from "../../context/ManagerContext";
 
 const drawerWidth = 240;
 export const DrawerContainer = (props: IDrawerContainerProps) => {
@@ -23,6 +24,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { gestorLogado } = useManager();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -120,15 +122,35 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
                 "&:hover": {
                   transform: "scale(1.1)",
                 },
-                mr: 2
+                mr: 2,
               }}
             >
               Voltar
             </Button>
           )}
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="p">
             {menuItems.find((item) => item.path === pathname)?.text}
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box>
+            <Typography
+              variant="body1"
+              noWrap
+              component="p"
+              sx={{
+                textAlign: "right",
+              }}
+            >
+              {gestorLogado?.nome}
+            </Typography>
+            <Typography
+              variant="body2"
+              component="p"
+              sx={{ textTransform: "lowercase" }}
+            >
+              {gestorLogado?.cargoDto?.nome.split("_")[1]}
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
