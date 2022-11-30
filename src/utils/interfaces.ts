@@ -81,8 +81,8 @@ export interface IChildren {
 export interface IGestor {
   nome: string;
   email: string;
-  senha: string;
-  tipoCargo: number;
+  senha?: string;
+  tipoCargo?: number | string;
   idGestor?: number;
 }
 
@@ -96,6 +96,12 @@ export interface IGestorDados {
   };
 }
 
+export interface ITabelaGestorPage {
+  totalPages: number;
+  atualPage: number;
+  pageSize: number;
+}
+
 export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
 
 export interface IUser extends IGestor {
@@ -105,9 +111,11 @@ export interface IUser extends IGestor {
 export interface IManagerContext {
   handleUserlogin: (user: ILogin) => Promise<void>;
   createNewManager: (manager: IGestor) => Promise<void>;
-  getManagers: () => Promise<void>;
+  getManagers: (page: number) => Promise<void>
   deleteManager: (idManager: number) => Promise<void>;
+  editManager: (idGestor: number, managerData: IGestor) => Promise<void>;
   gestorDadosLogin: object;
   loading: boolean;
   gestorDados: IGestorDados[];
+  pageDados: ITabelaGestorPage;
 }

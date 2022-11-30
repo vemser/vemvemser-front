@@ -97,3 +97,13 @@ export const userSchema = yup.object().shape({
     .oneOf([yup.ref("senha"), null], "As senhas devem ser iguais")
     .required("A confirmação de senha é obrigatória"),
 });
+
+export const userEditSchema = yup.object().shape({
+  nome: yup.string().required("O nome é obrigatório"),
+  email: yup
+    .string()
+    .matches(
+      /^[\w-.]+@dbccompany.com.br$/,
+      "Só é válido o email com @dbccompany.com.br"
+    ),
+})

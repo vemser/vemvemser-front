@@ -12,7 +12,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { ISearchColaborators } from "../../utils/interfaces";
+import { IGestor, IGestorDados, ISearchColaborators } from "../../utils/interfaces";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
@@ -21,14 +21,14 @@ export const Dashboard: React.FC = () => {
   const { register, handleSubmit, watch } = useForm<ISearchColaborators>();
   const navigate = useNavigate();
   const { nome, email } = watch();
-  const { loading, getManagers, gestorDados } = useManager();
+  const { loading, pageDados, gestorDados, getManagers } = useManager();
 
   const handleSearch = (data: ISearchColaborators) => {
     console.log(data);
   };
 
   useEffect(() => {
-    getManagers();
+    getManagers(0);
   }, []);
 
   const columns = [
@@ -132,12 +132,13 @@ export const Dashboard: React.FC = () => {
           </Box>
         ) : (
           <DataGrid
-            rows={gestorDados?.map((gestor) => {
+            rows={gestorDados?.map((gestor: IGestorDados ) => {
               return {
                 id: gestor.idGestor,
                 nome: gestor.nome,
                 email: gestor.email,
                 cargo: gestor.cargoDto.nome.split("_")[1],
+                tipoCargo: gestor.cargoDto.idCargo,
               };
             })}
             columns={columns}
@@ -176,7 +177,12 @@ export const Dashboard: React.FC = () => {
           >
             Novo usuário
           </Button>
-          <Pagination count={10} color="primary" size="small" />
+          <Pagination
+            count={pageDados?.totalPages}
+            color="primary"
+            size="small"
+            onChange={(event, page) => getManagers(page - 1)}
+          />
         </Box>
       </Box>
     </Stack>

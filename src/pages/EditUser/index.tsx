@@ -5,7 +5,6 @@ import {
   Typography,
   Button,
   FormLabel,
-  Tooltip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -14,16 +13,16 @@ import {
 } from "@mui/material";
 import { Radio } from "../../utils/theme";
 import { useForm } from "react-hook-form";
-import { IUser } from "../../utils/interfaces";
+import { IGestor, IGestorDados } from "../../utils/interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchema } from "../../utils/schemas";
+import { userEditSchema } from "../../utils/schemas";
 import { useLocation } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
 import { useState } from "react";
 
 export const EditUser: React.FC = () => {
   const { state } = useLocation();
-  const { deleteManager } = useManager();
+  const { deleteManager, editManager } = useManager();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -38,19 +37,21 @@ export const EditUser: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IUser>({
-    resolver: yupResolver(userSchema),
-    defaultValues: state,
+  } = useForm<IGestor>({
+    resolver: yupResolver(userEditSchema),
+    defaultValues: {
+      nome: state.nome,
+      email: state.email,
+      tipoCargo: state.tipoCargo.toString(),
+    },
   });
 
-  const handleAddNewUser = (data: IUser) => {
-    data = {
+  const handleEditUser = (data: IGestor) => {
+    editManager(state.id, {
       nome: data.nome,
       email: data.email,
-      senha: data.senha,
       tipoCargo: data.tipoCargo,
-    };
-    console.log(data);
+    });
   };
 
   return (
@@ -63,7 +64,7 @@ export const EditUser: React.FC = () => {
           alignItems="center"
           alignContent="center"
           id="editar-usuario"
-          onSubmit={handleSubmit(handleAddNewUser)}
+          onSubmit={handleSubmit(handleEditUser)}
         >
           <Grid item xs={12} md={6} component="form">
             <TextField
@@ -95,44 +96,6 @@ export const EditUser: React.FC = () => {
               {errors.email?.message}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6} component="form">
-            <Tooltip
-              title="A senha deve ter no mínimo 8 caracteres, 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caracter especial"
-              placement="bottom-end"
-              arrow
-            >
-              <TextField
-                label="Senha"
-                variant="outlined"
-                type="password"
-                sx={{
-                  width: "100%",
-                }}
-                id="editar-usuario-senha"
-                error={!!errors.senha}
-                {...register("senha")}
-              />
-            </Tooltip>
-            <Typography variant="caption" color="error">
-              {errors.senha?.message}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6} component="form">
-            <TextField
-              label="Confirme a senha"
-              variant="outlined"
-              type="password"
-              sx={{
-                width: "100%",
-              }}
-              id="editar-usuario-confirmar-senha"
-              error={!!errors.confirmarSenha}
-              {...register("confirmarSenha")}
-            />
-            <Typography variant="caption" color="error">
-              {errors.confirmarSenha?.message}
-            </Typography>
-          </Grid>
           <Grid item xs={12} md={6}>
             <FormLabel component="legend" sx={{ mb: 1, ml: 1 }}>
               Qual cargo o usuário irá exercer?
@@ -147,7 +110,7 @@ export const EditUser: React.FC = () => {
               >
                 <Radio
                   type="radio"
-                  value={0}
+                  value={2}
                   id="editar-usuario-colaborador"
                   {...register("tipoCargo")}
                 />

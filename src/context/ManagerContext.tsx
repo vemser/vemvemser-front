@@ -8,6 +8,7 @@ import {
   IGestor,
   ILogin,
   IGestorDados,
+  ITabelaGestorPage,
 } from "../utils/interfaces";
 import nProgress from "nprogress";
 import axios from "axios";
@@ -18,6 +19,9 @@ export const ManagerProvider = ({ children }: IChildren) => {
 
   const [gestorDadosLogin, setGestorDadosLogin] = useState({});
   const [gestorDados, setGestorDados] = useState<IGestorDados[]>([]);
+  const [pageDados, setPageDados] = useState<ITabelaGestorPage>(
+    {} as ITabelaGestorPage
+  );
   const [loading, setLoading] = useState(false);
 
   const handleUserlogin = async (user: ILogin) => {
@@ -49,13 +53,22 @@ export const ManagerProvider = ({ children }: IChildren) => {
     }
   };
 
-  const getManagers = async () => {
+  const getManagers = async (page: number) => {
     nProgress.start();
     setLoading(true);
     try {
-      await axios.get(`${baseurl}/Gestor`).then((response) => {
-        setGestorDados(response.data.elementos);
-      });
+      await axios
+        .get(
+          `${baseurl}/Gestor?pagina=${page}&tamanho=10&sort=idGestor&order=0`
+        )
+        .then((response) => {
+          setGestorDados(response.data.elementos);
+          setPageDados({
+            totalPages: response.data.quantidadePaginas,
+            atualPage: response.data.pagina,
+            pageSize: response.data.tamanho,
+          });
+        });
     } catch (error) {
       toast.error("Erro ao buscar usuários");
     } finally {
@@ -64,12 +77,26 @@ export const ManagerProvider = ({ children }: IChildren) => {
     }
   };
 
+  const editManager = async (idGestor: number, managerData: IGestor ) => {
+    nProgress.start();
+    try {
+      await axios.put(`${baseurl}/Gestor/${idGestor}`, managerData).then(() => {
+        toast.success("Usuário editado com sucesso");
+        navigate("/dashboard");
+      });
+    } catch (error) {
+      toast.error("Erro ao editar usuário");
+    } finally {
+      nProgress.done();
+    }
+  };
+
   const deleteManager = async (idManager: number) => {
     nProgress.start();
     try {
       await axios.delete(`${baseurl}/Gestor/${idManager}`).then(() => {
         toast.success("Usuário deletado com sucesso");
-        getManagers();
+        getManagers(0);
         navigate("/dashboard");
       });
     } catch (error) {
@@ -86,9 +113,11 @@ export const ManagerProvider = ({ children }: IChildren) => {
         createNewManager,
         getManagers,
         deleteManager,
+        editManager,
         gestorDados,
         loading,
         gestorDadosLogin,
+        pageDados,
       }}
     >
       {children}
