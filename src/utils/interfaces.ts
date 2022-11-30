@@ -101,6 +101,7 @@ export interface IGestorDados {
     idCargo: number;
     nome: string;
   };
+  ativo?: TBoolean;
 }
 
 export interface ILoginDados {
@@ -118,7 +119,13 @@ export interface ITabelaGestorPage {
   pageSize: number;
 }
 
-export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
+// export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
+
+export interface ISearchColaborators {
+  nome?: string;
+  email?: string;
+  cargo: "ADMINISTRADOR" | "COLABORADOR";
+}
 
 export interface IUser extends IGestor {
   confirmarSenha?: boolean;
@@ -129,8 +136,11 @@ export interface IManagerContext {
   getManagers: (page: number) => Promise<void>;
   deleteManager: (idManager: number) => Promise<void>;
   editManager: (idGestor: number, managerData: IGestor) => Promise<void>;
+  loggedManager: () => Promise<void>;
+  searchManager: (search: ISearchColaborators) => Promise<void>;
   loading: boolean;
   gestorDados: IGestorDados[];
   pageDados: ITabelaGestorPage;
   gestorLogado: IGestorDados;
+  filteredManagers: IGestorDados[];
 }

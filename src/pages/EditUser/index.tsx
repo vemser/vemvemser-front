@@ -150,7 +150,7 @@ export const EditUser: React.FC = () => {
               {gestorLogado?.cargoDto?.idCargo === 1 && (
                 <Button
                   variant="contained"
-                  color="error"
+                  color="secondary"
                   id="editar-usuario-exccluir"
                   sx={{
                     width: { xs: "100%", sm: "fit-content" },

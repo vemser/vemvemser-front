@@ -8,6 +8,7 @@ import {
   IGestor,
   IGestorDados,
   ITabelaGestorPage,
+  ISearchColaborators,
 } from "../utils/interfaces";
 import nProgress from "nprogress";
 import axios from "axios";
@@ -16,6 +17,7 @@ export const ManagerContext = createContext({} as IManagerContext);
 export const ManagerProvider = ({ children }: IChildren) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [filteredManagers, setFilteredManagers] = useState<IGestorDados[]>([]);
 
   const [gestorDados, setGestorDados] = useState<IGestorDados[]>([]);
   const [pageDados, setPageDados] = useState<ITabelaGestorPage>(
@@ -127,10 +129,31 @@ export const ManagerProvider = ({ children }: IChildren) => {
         })
         .then((response) => {
           setGestorLogado(response.data);
-          loggedManager();
         });
     } catch (error) {
       toast.error("Erro ao buscar usuário logado");
+    } finally {
+      nProgress.done();
+    }
+  };
+
+  const searchManager = async (search: ISearchColaborators) => {
+    nProgress.start();
+    try {
+      axios
+        .post(`${baseurl}/gestor/gestor-by-nome-email`, search, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setFilteredManagers(response.data);
+          if (response.data.length === 0) {
+            toast.info("Tente outra pesquisa!");
+          }
+        });
+    } catch (error) {
+      toast.error("Erro ao buscar usuário");
     } finally {
       nProgress.done();
     }
@@ -143,6 +166,9 @@ export const ManagerProvider = ({ children }: IChildren) => {
         getManagers,
         deleteManager,
         editManager,
+        loggedManager,
+        searchManager,
+        filteredManagers,
         gestorDados,
         loading,
         pageDados,

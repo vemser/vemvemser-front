@@ -10,13 +10,13 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IDrawerContainerProps } from "../../utils/interfaces";
 import { menuItems } from "../../utils/menuItems";
 import { CaretLeft, List as ListIcon } from "phosphor-react";
-import logoDbc from "../../assets/logo-blue.svg";
 import { useManager } from "../../context/ManagerContext";
+import logoDbc from "../../assets/logo-blue.svg";
 
 const drawerWidth = 240;
 export const DrawerContainer = (props: IDrawerContainerProps) => {
@@ -24,11 +24,15 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { gestorLogado } = useManager();
+  const { gestorLogado, loggedManager } = useManager();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    loggedManager();
+  }, []);
 
   const drawer = (
     <div>
@@ -137,6 +141,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
               variant="body1"
               noWrap
               component="p"
+              id="header-gestor-nome"
               sx={{
                 textAlign: "right",
               }}
@@ -146,6 +151,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
             <Typography
               variant="body2"
               component="p"
+              id="header-gestor-cargo"
               sx={{ textTransform: "lowercase" }}
             >
               {gestorLogado?.cargoDto?.nome.split("_")[1]}

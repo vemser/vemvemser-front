@@ -11,31 +11,59 @@ import {
   Pagination,
   Skeleton,
 } from "@mui/material";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { IGestorDados, ISearchColaborators } from "../../utils/interfaces";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
-import { useAuth } from "../../context/AuthContext";
 
 export const Dashboard: React.FC = () => {
-  const { register, handleSubmit, watch } = useForm<ISearchColaborators>();
+  const { register, handleSubmit, watch, reset } =
+    useForm<ISearchColaborators>();
   const navigate = useNavigate();
   const { nome, email } = watch();
-  const { loading, pageDados, gestorDados, gestorLogado, getManagers } = useManager();
+  const {
+    loading,
+    pageDados,
+    gestorDados,
+    gestorLogado,
+    filteredManagers,
+    getManagers,
+    searchManager,
+  } = useManager();
 
   const handleSearch = (data: ISearchColaborators) => {
-    console.log(data);
-    console.log(gestorLogado);
+    searchManager(data);
   };
 
   useEffect(() => {
     getManagers(0);
   }, []);
 
-  useEffect(() => {
-    console.log(gestorDados);
-  }, [gestorDados]);
+  const rows = () => {
+    if (filteredManagers.length > 0) {
+      return filteredManagers.map((gestor: IGestorDados) => {
+        return {
+          id: gestor.idGestor,
+          nome: gestor.nome,
+          email: gestor.email,
+          cargo: gestor.cargoDto.nome.split("_")[1],
+          tipoCargo: gestor.cargoDto.idCargo,
+        };
+      });
+    } else {
+      return gestorDados.map((gestor) => {
+        return {
+          id: gestor.idGestor,
+          nome: gestor.nome,
+          email: gestor.email,
+          cargo: gestor.cargoDto.nome.split("_")[1],
+          tipoCargo: gestor.cargoDto.idCargo,
+        };
+      });
+    }
+  };
 
   const columns = [
     { field: "nome", headerName: "Nome", width: 200 },
@@ -98,10 +126,10 @@ export const Dashboard: React.FC = () => {
               variant="outlined"
               sx={{ width: "100%" }}
               id="dashboard-buscar-cargo"
-              {...register("tipoCargo")}
+              {...register("cargo")}
             >
-              <option value="Administrador">Administrador</option>
-              <option value="Colaborador">Colaborador</option>
+              <option value="ADMINISTRADOR">Administrador</option>
+              <option value="COLABORADOR">Colaborador</option>
             </Select>
           </Grid>
         </Grid>
@@ -138,17 +166,11 @@ export const Dashboard: React.FC = () => {
           </Box>
         ) : (
           <DataGrid
-            rows={gestorDados?.map((gestor: IGestorDados) => {
-              return {
-                id: gestor.idGestor,
-                nome: gestor.nome,
-                email: gestor.email,
-                cargo: gestor.cargoDto.nome.split("_")[1],
-                tipoCargo: gestor.cargoDto.idCargo,
-              };
-            })}
+            rows={rows()}
             columns={columns}
-            pageSize={10}
+            pageSize={
+              filteredManagers.length > 0 ? filteredManagers.length : 10
+            }
             hideFooterPagination
             onRowClick={async (params) => {
               navigate(`/dashboard/edit-user`, {
@@ -185,12 +207,24 @@ export const Dashboard: React.FC = () => {
               Novo usuário
             </Button>
           )}
-          <Pagination
-            count={pageDados?.totalPages}
-            color="primary"
-            size="small"
-            onChange={(event, page) => getManagers(page - 1)}
-          />
+          {!filteredManagers.length && (
+            <Pagination
+              count={pageDados?.totalPages}
+              color="primary"
+              size="small"
+              onChange={(event, page) => getManagers(page - 1)}
+            />
+          )}
+          {filteredManagers.length > 0 && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                searchManager({ nome: "", email: "", cargo: "ADMINISTRADOR" });
+              }}
+            >
+              Limpar busca
+            </Button>
+          )}
         </Box>
       </Box>
     </Stack>
