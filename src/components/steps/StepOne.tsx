@@ -16,6 +16,7 @@ import { useCandidates } from "../../context/CandidatesContext";
 import { ICandidateForm, IStepProps } from "../../utils/interfaces";
 import { states } from "../../utils/states";
 import React, { useState } from "react";
+import { cpf as cpfTest } from "cpf-cnpj-validator";
 
 import InputMask from "react-input-mask";
 import { stepOneSchema } from "../../utils/schemas";
@@ -27,6 +28,7 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<ICandidateForm>({
     mode: "all",
@@ -34,9 +36,16 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
   });
 
   const handleFormSubmit = (data: ICandidateForm) => {
+    data.telefone = data.telefone.replace(/[^0-9]/g, "");
+
     setFormValues(data);
     nextFormStep && nextFormStep();
   };
+
+  const { cpf } = watch();
+
+  const checkCpf = cpfTest.isValid(cpf);
+  console.log(checkCpf);
 
   return (
     <Stack
@@ -75,68 +84,7 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
           </Typography>
         </Grid>
 
-        <Grid item xs={6}>
-          <FormLabel component="legend" sx={{ mb: 1 }}>
-            Qual o seu sexo?
-          </FormLabel>
-          <Select
-            native
-            variant="outlined"
-            sx={{ width: "100%" }}
-            id="s1-candidato-genero"
-            {...register("genero")}
-          >
-            <option value="masculino">Masculino</option>
-            <option value="feminino">Feminino</option>
-            <option value="neutro">Prefiro não informar</option>
-          </Select>
-        </Grid>
-
-        <Grid item xs={6}>
-          <FormLabel component="legend" sx={{ mb: 1 }}>
-            Você possui alguma deficiência?
-          </FormLabel>
-          <Tooltip
-            title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
-            placement="bottom-end"
-            arrow
-          >
-            <Select
-              native
-              variant="outlined"
-              sx={{ width: "100%" }}
-              id="s1-candidato-pcd"
-              onChange={(e) => {
-                e.target.value === "true" ? setIsPcd(true) : setIsPcd(false);
-              }}
-            >
-              <option value="false">Não</option>
-              <option value="true">Sim</option>
-            </Select>
-          </Tooltip>
-        </Grid>
-
-        {isPcd && (
-          <Grid item xs={12}>
-            <Tooltip
-              title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
-              placement="bottom-start"
-              arrow
-            >
-              <TextField
-                sx={{
-                  width: "100%",
-                }}
-                label="Qual a sua deficiência"
-                variant="outlined"
-                id="s1-candidato-pcd-descricao"
-                {...register("pcd")}
-              />
-            </Tooltip>
-          </Grid>
-        )}
-
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <TextField
             label="Email"
             variant="outlined"
@@ -160,7 +108,7 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
                   {...inputProps}
                   label="CPF"
                   variant="outlined"
-                  error={!!errors.cpf}
+                  error={checkCpf === false && cpf?.length >= 11}
                   id="s1-candidato-cpf"
                   sx={{
                     width: "100%",
@@ -171,7 +119,7 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
           </InputMask>
 
           <Typography variant="caption" color="error">
-            {errors.cpf?.message}
+            {checkCpf === false && cpf?.length >= 11 && "O CPF precisa ser válido"}
           </Typography>
         </Grid>
         <Grid item xs={6} display="flex" flexDirection="column">
@@ -229,7 +177,7 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
             {errors.estado?.message}
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <TextField
             label="Cidade"
             variant="outlined"
@@ -243,8 +191,57 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
           </Typography>
         </Grid>
 
+        <Grid item xs={12} md={6}>
+          <FormLabel component="legend" sx={{ mb: 1 }}>
+            Você possui alguma deficiência?
+          </FormLabel>
+          <Tooltip
+            title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
+            placement="bottom-end"
+            arrow
+          >
+            <Select
+              native
+              variant="outlined"
+              sx={{ width: "100%" }}
+              id="s1-candidato-pcd"
+              onChange={(e) => {
+                e.target.value === "true" ? setIsPcd(true) : setIsPcd(false);
+              }}
+            >
+              <option value="false">Não</option>
+              <option value="true">Sim</option>
+            </Select>
+          </Tooltip>
+        </Grid>
+
+        {isPcd && (
+          <Grid item xs={12}>
+            <Tooltip
+              title="Essa não é uma pergunta obrigatória, mas é importante para que possamos oferecer uma melhor experiência para você."
+              placement="bottom-start"
+              arrow
+            >
+              <TextField
+                sx={{
+                  width: "100%",
+                }}
+                label="Qual a sua deficiência"
+                variant="outlined"
+                id="s1-candidato-pcd-descricao"
+                {...register("pcd")}
+              />
+            </Tooltip>
+          </Grid>
+        )}
+
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" id="s1-candidato-enviar">
+          <Button
+            type="submit"
+            variant="contained"
+            id="s1-candidato-enviar"
+            disabled={checkCpf === false}
+          >
             Próximo
           </Button>
         </Grid>

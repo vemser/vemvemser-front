@@ -10,7 +10,7 @@ import {
   AlertTitle,
 } from "@mui/material";
 import { useCandidates } from "../../context/CandidatesContext";
-import { ICandidateForm, IFormCardProps, IInscriptionForm } from "../../utils/interfaces";
+import { IFormCardProps, IInscriptionForm } from "../../utils/interfaces";
 
 const steps: string[] = [
   "Informações Cadastrais",
@@ -63,7 +63,7 @@ export const FormCard = ({
             ))}
           </Stepper>
 
-          {currentStep > 0 && currentStep < 2 && (
+          {currentStep > 0 && currentStep < 3 && (
             <Button onClick={prevFormStep} variant="outlined" sx={{ mb: 2 }}>
               Voltar
             </Button>
@@ -75,11 +75,24 @@ export const FormCard = ({
   );
 };
 
-export const FormCompleted = () => {
-  const { data, postFormulario } = useCandidates();
+/*
+candidato:
+nome: string;
+  email: string;
+  telefone: string;
+  rg: string;
+  estado: string;
+  cidade: string;
+  cpf: string;
+  pcd: TBoolean;
 
-  const formulario: IInscriptionForm = {
-    matriculadoBoolean: data?.matriculadoBoolean,
+*/
+
+export const FormCompleted = () => {
+  const { data, createCandidate } = useCandidates();
+
+  const formulario = {
+    matriculadoBoolean: data.matriculadoBoolean,
     curso: data.curso,
     instituicao: data.instituicao,
     turno: data.turno,
@@ -99,9 +112,11 @@ export const FormCompleted = () => {
     configuracoes: data.configuracoes,
     linkedin: data.linkedin,
     trilhas: data.trilhas,
+    genero: data.genero,
+    orientacao: data.orientacao,
   };
 
-  const candidato: ICandidateForm = {
+  const candidato = {
     nome: data.nome,
     email: data.email,
     telefone: data.telefone,
@@ -109,13 +124,13 @@ export const FormCompleted = () => {
     estado: data.estado,
     cidade: data.cidade,
     cpf: data.cpf,
-    genero: data.genero,
     pcd: data.pcd,
   };
 
   useEffect(() => {
-    postFormulario(formulario, candidato);
-  });
+    createCandidate(formulario, candidato);
+    console.log(candidato)
+  }, []);
 
   return (
     <Alert

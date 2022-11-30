@@ -18,11 +18,12 @@ export interface ICandidateForm {
   estado: string;
   cidade: string;
   cpf: string;
-  genero: string;
-  pcd: TBoolean | boolean;
+  pcd: TBoolean;
 }
 
 export interface IInscriptionForm {
+  genero: string;
+  orientacao: string;
   matriculadoBoolean: TBoolean;
   curso: string;
   instituicao: string;
@@ -65,12 +66,9 @@ export interface IFormCardProps {
 export interface ICandidateContext {
   setFormValues: (values: object) => void;
   getTrilhas: () => void;
-  postFormulario: (
-    formulario: IInscriptionForm,
-    candidato: ICandidateForm
-  ) => void;
   trilhas: ITrilhas[];
   data: IInscriptionForm & ICandidateForm;
+  createCandidate: (formulario: IInscriptionForm, candidato: ICandidateForm) => Promise<void>
 }
 
 export interface ITrilhas {
@@ -108,7 +106,6 @@ export interface ILoginDados {
     nome: string;
   };
 }
-
 
 export interface ITabelaGestorPage {
   totalPages: number;
