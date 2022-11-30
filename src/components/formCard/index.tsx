@@ -75,21 +75,8 @@ export const FormCard = ({
   );
 };
 
-/*
-candidato:
-nome: string;
-  email: string;
-  telefone: string;
-  rg: string;
-  estado: string;
-  cidade: string;
-  cpf: string;
-  pcd: TBoolean;
-
-*/
-
 export const FormCompleted = () => {
-  const { data, createCandidate } = useCandidates();
+  const { data, idForm, createCandidate, updateCurriculo } = useCandidates();
 
   const formulario = {
     matriculadoBoolean: data.matriculadoBoolean,
@@ -119,6 +106,7 @@ export const FormCompleted = () => {
   const candidato = {
     nome: data.nome,
     email: data.email,
+    dataNascimento: data.dataNascimento,
     telefone: data.telefone,
     rg: data.rg,
     estado: data.estado,
@@ -127,9 +115,10 @@ export const FormCompleted = () => {
     pcd: data.pcd,
   };
 
+  const pdf = data.curriculo;
+
   useEffect(() => {
     createCandidate(formulario, candidato);
-    console.log(candidato)
   }, []);
 
   return (

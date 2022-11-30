@@ -14,6 +14,7 @@ export interface ICandidateForm {
   nome: string;
   email: string;
   telefone: string;
+  dataNascimento?: string;
   rg: string;
   estado: string;
   cidade: string;
@@ -68,7 +69,12 @@ export interface ICandidateContext {
   getTrilhas: () => void;
   trilhas: ITrilhas[];
   data: IInscriptionForm & ICandidateForm;
-  createCandidate: (formulario: IInscriptionForm, candidato: ICandidateForm) => Promise<void>
+  createCandidate: (
+    formulario: IInscriptionForm,
+    candidato: ICandidateForm
+  ) => Promise<void>;
+  updateCurriculo: (idFormulario: number, curriculo: any) => void;
+  idForm: number;
 }
 
 export interface ITrilhas {

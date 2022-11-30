@@ -18,7 +18,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     {} as IInscriptionForm & ICandidateForm
   );
   const [trilhas, setTrilhas] = useState<ITrilhas[]>([]);
-  const token = localStorage.getItem("token");
+  const [idForm, setIdForm] = useState<number>(0);
 
   const setFormValues = (values: object) => {
     setData((prevValues: any) => ({
@@ -53,6 +53,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         )
         .then((response) => {
           const idFormulario = response.data.idFormulario;
+          setIdForm(idFormulario);
 
           axios
             .post(`${baseurl}/candidato/cadastro`, {
@@ -60,17 +61,36 @@ export const CandidatesProvider = ({ children }: IChildren) => {
               idFormulario,
             })
             .then(() => {
+              toast.success("Seu formulário foi enviado com sucesso!");
               nProgress.done();
             })
             .catch((err) => {
-              toast.error(err.response.data.errors[0]);
+              // toast.error(err.response?.data?.errors[0]);
               console.log(err);
               nProgress.done();
             });
         });
-      toast.success("Candidato cadastrado com sucesso!");
     } catch (error) {
       console.log(error);
+    } finally {
+      nProgress.done();
+    }
+  };
+
+  const updateCurriculo = (idFormulario: number, curriculo: any) => {
+    nProgress.start();
+    try {
+      axios
+        .put(
+          `${baseurl}/formulario/update-curriculo-by-id-formulario/${idFormulario}`,
+          curriculo
+        )
+        .then(() => {
+          console.log("curriculo atualizado");
+          nProgress.done();
+        });
+    } catch (error) {
+      toast.error("Erro ao atualizar currículo");
     } finally {
       nProgress.done();
     }
@@ -82,8 +102,10 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         setFormValues,
         getTrilhas,
         createCandidate,
+        updateCurriculo,
         data,
         trilhas,
+        idForm,
       }}
     >
       {children}

@@ -127,6 +127,7 @@ export const ManagerProvider = ({ children }: IChildren) => {
         })
         .then((response) => {
           setGestorLogado(response.data);
+          loggedManager();
         });
     } catch (error) {
       toast.error("Erro ao buscar usuário logado");
@@ -134,10 +135,6 @@ export const ManagerProvider = ({ children }: IChildren) => {
       nProgress.done();
     }
   };
-
-  useEffect(() => {
-    loggedManager();
-  }, [token]);
 
   return (
     <ManagerContext.Provider
