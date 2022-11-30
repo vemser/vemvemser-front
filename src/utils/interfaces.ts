@@ -5,6 +5,11 @@ export interface ILogin {
   senha: string;
 }
 
+export interface IAuthContext {
+  auth: (values: ILogin) => Promise<void>;
+  token: string;
+}
+
 export interface ICandidateForm {
   nome: string;
   email: string;
@@ -109,12 +114,10 @@ export interface IUser extends IGestor {
 }
 
 export interface IManagerContext {
-  handleUserlogin: (user: ILogin) => Promise<void>;
   createNewManager: (manager: IGestor) => Promise<void>;
-  getManagers: (page: number) => Promise<void>
+  getManagers: (page: number) => Promise<void>;
   deleteManager: (idManager: number) => Promise<void>;
   editManager: (idGestor: number, managerData: IGestor) => Promise<void>;
-  gestorDadosLogin: object;
   loading: boolean;
   gestorDados: IGestorDados[];
   pageDados: ITabelaGestorPage;

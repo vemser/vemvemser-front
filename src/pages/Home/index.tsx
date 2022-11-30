@@ -13,17 +13,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ILogin } from "../../utils/interfaces";
 import { loginSchema } from "../../utils/schemas";
 import { useEffect } from "react";
-import { useManager } from "../../context/ManagerContext";
 import logoDbc from "../../assets/logo-white.svg";
+import { useAuth } from "../../context/AuthContext";
 
 export const Home: React.FC = () => {
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    token && navigate("/dashboard");
-  }, []);
   const navigate = useNavigate();
+  const { auth, token } = useAuth();
 
-  const { handleUserlogin } = useManager();
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    } else {
+      navigate("/");
+    }
+  }, []);
 
   const {
     register,
@@ -34,7 +37,7 @@ export const Home: React.FC = () => {
   });
 
   const handleLogin = (data: ILogin) => {
-    handleUserlogin(data);
+    auth(data);
   };
 
   return (
