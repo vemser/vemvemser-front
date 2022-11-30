@@ -18,7 +18,7 @@ export interface ICandidateForm {
 }
 
 export interface IInscriptionForm {
-  matriculado: TBoolean;
+  matriculadoBoolean: TBoolean;
   curso: string;
   instituicao: string;
   turno: "MANHA" | "TARDE" | "NOITE";
@@ -69,7 +69,6 @@ export interface ICandidateContext {
   data: object;
 }
 
-
 export interface ITrilhas {
   idTrilha: number;
   nome: string;
@@ -87,6 +86,16 @@ export interface IGestor {
   idGestor?: number;
 }
 
+export interface IGestorDados {
+  idGestor: number;
+  nome: string;
+  email: string;
+  cargoDto: {
+    idCargo: number;
+    nome: string;
+  };
+}
+
 export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
 
 export interface IUser extends IGestor {
@@ -100,5 +109,5 @@ export interface IManagerContext {
   deleteManager: (idManager: number) => Promise<void>;
   gestorDadosLogin: object;
   loading: boolean;
-  gestorDados: IGestor[];
+  gestorDados: IGestorDados[];
 }

@@ -33,11 +33,12 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
   } = useForm<IInscriptionForm>({
     mode: "all",
     defaultValues: {
-      matriculado: "T",
+      matriculadoBoolean: "T",
       turno: "MANHA",
       provaBoolean: "T",
       efetivacaoBoolean: "T",
       disponibilidadeBoolean: "T",
+      trilhas: [],
     },
     resolver: yupResolver(stepTwoSchema),
   });
@@ -50,7 +51,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
     console.log(trilhas);
   }, [trilhas]);
 
-  const { matriculado, curriculo, github, linkedin } = watch();
+  const { matriculadoBoolean, curriculo, github, linkedin } = watch();
   const curriculoIsPdf = curriculo?.[0]?.type === "application/pdf";
 
   const handleFormSubmit = (data: IInscriptionForm) => {
@@ -109,7 +110,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
                 type="radio"
                 value="T"
                 id="s2-candidato-matriculado-sim"
-                {...register("matriculado")}
+                {...register("matriculadoBoolean")}
               />
               Sim
             </FormLabel>
@@ -124,14 +125,14 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
                 type="radio"
                 value="F"
                 id="s2-candidato-matriculado-nao"
-                {...register("matriculado")}
+                {...register("matriculadoBoolean")}
               />
               Não
             </FormLabel>
           </Stack>
         </Grid>
 
-        {matriculado === "T" && (
+        {matriculadoBoolean === "T" && (
           <Grid item xs={12} md={6}>
             <FormLabel component="legend" sx={{ mb: 1 }}>
               Em qual turno você estuda?
@@ -185,7 +186,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
             </Stack>
           </Grid>
         )}
-        {matriculado === "T" && (
+        {matriculadoBoolean === "T" && (
           <>
             <Grid item xs={12} md={6}>
               <TextField
@@ -517,6 +518,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
                 {trilhas.map((trilha) => {
                   return (
                     <FormControlLabel
+                      key={trilha.idTrilha}
                       control={
                         <Checkbox
                           color="primary"
@@ -720,21 +722,21 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
             variant="contained"
             id="s2-candidato-enviar"
             sx={{
-              display: matriculado === "T" ? "initial" : "none",
+              display: matriculadoBoolean === "T" ? "initial" : "none",
               width: {
                 xs: "100%",
                 md: "fit-content",
               },
             }}
             disabled={
-              matriculado === "F" ||
+              matriculadoBoolean === "F" ||
               (curriculo?.[0] && !curriculoIsPdf) ||
               (!curriculo?.[0] && !github && !linkedin)
             }
           >
             Próximo
           </Button>
-          {matriculado === "F" && (
+          {matriculadoBoolean === "F" && (
             <Typography
               variant="caption"
               color="error"

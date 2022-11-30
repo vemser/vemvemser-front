@@ -33,8 +33,8 @@ export const Dashboard: React.FC = () => {
 
   const columns = [
     { field: "nome", headerName: "Nome", width: 200 },
-    // { field: "email", headerName: "Email", minWidth: 220, flex: 1 },
-    // { field: "cargo", headerName: "Cargo", width: 120 },
+    { field: "email", headerName: "Email", minWidth: 200, flex: 1 },
+    { field: "cargo", headerName: "Cargo", width: 160 },
   ];
 
   return (
@@ -136,6 +136,8 @@ export const Dashboard: React.FC = () => {
               return {
                 id: gestor.idGestor,
                 nome: gestor.nome,
+                email: gestor.email,
+                cargo: gestor.cargoDto.nome.split("_")[1],
               };
             })}
             columns={columns}
