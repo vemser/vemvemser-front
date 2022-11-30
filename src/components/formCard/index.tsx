@@ -123,9 +123,9 @@ export const FormCompleted = () => {
     if (pdf) {
       const idFormulario: string = localStorage.getItem("idFormulario") || "";
       updateCurriculo(parseInt(idFormulario), pdf);
+      localStorage.clear();
     }
 
-    localStorage.clear();
   }, []);
 
   return (
