@@ -9,6 +9,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { NewUser } from "./pages/NewUser";
 import { EditUser } from "./pages/EditUser";
 import { ManagerProvider } from "./context/ManagerContext";
+import { Subscription } from "./pages/Subscription";
 
 export const Router = () => {
   return (
@@ -24,6 +25,7 @@ export const Router = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/dashboard/new-user" element={<NewUser />} />
                 <Route path="/dashboard/edit-user" element={<EditUser />} />
+                <Route path="/subscriptions/" element={<Subscription />} />
               </Route>
             </Routes>
           </CandidatesProvider>

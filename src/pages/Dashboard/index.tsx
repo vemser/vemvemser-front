@@ -12,7 +12,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { IGestor, IGestorDados, ISearchColaborators } from "../../utils/interfaces";
+import { IGestorDados, ISearchColaborators } from "../../utils/interfaces";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";

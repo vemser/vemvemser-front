@@ -104,9 +104,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
           >
             <ListIcon size={28} color="#ffffff" weight="bold" />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {menuItems.find((item) => item.path === pathname)?.text}
-          </Typography>
+
           {pathname !== "/dashboard" && (
             <Button
               onClick={() => navigate(-1)}
@@ -122,11 +120,15 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
                 "&:hover": {
                   transform: "scale(1.1)",
                 },
+                mr: 2
               }}
             >
               Voltar
             </Button>
           )}
+          <Typography variant="h6" noWrap component="div">
+            {menuItems.find((item) => item.path === pathname)?.text}
+          </Typography>
         </Toolbar>
       </AppBar>
       <Box
