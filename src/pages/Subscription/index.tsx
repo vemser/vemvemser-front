@@ -1,10 +1,11 @@
 import { Stack, Grid, TextField, Box, Button, Pagination } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
-import { ICandidatosDados, ITrilhas } from "../../utils/interfaces";
+import { ITrilhas } from "../../utils/interfaces";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { field: "nome", headerName: "Nome", minWidth: 160, flex: 1 },
@@ -21,6 +22,8 @@ interface ISearchCandidateByEmail {
 }
 
 export const Subscription = () => {
+  const navigate = useNavigate();
+
   const {
     getCandidates,
     getCandidateByEmail,
@@ -28,6 +31,7 @@ export const Subscription = () => {
     searcheredCandidates,
   } = useCandidates();
   const { register, handleSubmit } = useForm<ISearchCandidateByEmail>();
+  const [resetSearch, setResetSearch] = useState(false);
 
   useEffect(() => {
     getCandidates(0);
@@ -41,47 +45,28 @@ export const Subscription = () => {
     console.log(searcheredCandidates);
   }, [searcheredCandidates]);
 
-  const rows = () => {
-    if (searcheredCandidates.idCandidato > 1) {
-      return [
-        {
-          id: searcheredCandidates.idCandidato,
-          nome: searcheredCandidates.nome,
-          email: searcheredCandidates.email,
-          telefone: searcheredCandidates.telefone,
-          dataNascimento: searcheredCandidates.dataNascimento,
-          trilhas: searcheredCandidates.formulario.trilhas.map(
-            (trilha: ITrilhas) => {
-              return trilha.nome;
-            }
-          ),
-          turno: searcheredCandidates.formulario.turno,
-          estado: searcheredCandidates.estado,
-        },
-      ];
-    } else {
-      return candidates?.elementos?.map((candidato) => {
-        return {
-          id: candidato.idCandidato,
-          nome: candidato.nome,
-          email: candidato.email,
-          telefone: candidato.telefone,
-          dataNascimento: candidato.dataNascimento,
-          trilhas: candidato.formulario.trilhas.map((trilha: ITrilhas) => {
-            return trilha.nome;
-          }),
-          turno: candidato.formulario.turno,
-          estado: candidato.estado,
-          rest: {
-            ...candidato,
-          },
-        };
-      });
-    }
-  };
-
   const handleSearch = (data: ISearchCandidateByEmail) => {
     getCandidateByEmail(data.email);
+  };
+
+  const rows = () => {
+    return candidates?.elementos?.map((candidato) => {
+      return {
+        id: candidato.idCandidato,
+        nome: candidato.nome,
+        email: candidato.email,
+        telefone: candidato.telefone,
+        dataNascimento: candidato.dataNascimento,
+        trilhas: candidato.formulario.trilhas.map((trilha: ITrilhas) => {
+          return trilha.nome;
+        }),
+        turno: candidato.formulario.turno,
+        estado: candidato.estado,
+        rest: {
+          ...candidato,
+        },
+      };
+    });
   };
 
   return (
@@ -162,34 +147,14 @@ export const Subscription = () => {
                 alignItems: "center",
               }}
             >
-              {/* <Pagination
+              <Pagination
                 count={candidates?.quantidadePaginas}
                 color="primary"
                 size="small"
                 onChange={(event, page) => {
                   getCandidates(page - 1);
                 }}
-              /> */}
-              {!searcheredCandidates.idCandidato && (
-                <Pagination
-                  count={candidates?.quantidadePaginas}
-                  color="primary"
-                  size="small"
-                  onChange={(event, page) => {
-                    getCandidates(page - 1);
-                  }}
-                />
-              )}
-              {searcheredCandidates.idCandidato && (
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    getCandidateByEmail("");
-                  }}
-                >
-                  Limpar busca
-                </Button>
-              )}
+              />
             </Box>
           </Box>
         </Grid>

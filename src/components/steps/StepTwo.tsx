@@ -65,10 +65,10 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
     const trilhas = formValues.trilhas.map((trilha: string) => Number(trilha));
     formValues.trilhas = trilhas;
 
-    if (curriculoIsPdf) {
+    // if (curriculoIsPdf) {
       setFormValues(formValues);
       nextFormStep && nextFormStep();
-    }
+    // }
   };
 
   return (

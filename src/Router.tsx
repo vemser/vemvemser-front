@@ -11,6 +11,7 @@ import { EditUser } from "./pages/EditUser";
 import { ManagerProvider } from "./context/ManagerContext";
 import { Subscription } from "./pages/Subscription";
 import { AuthProvider } from "./context/AuthContext";
+import { Curriculum } from "./pages/Curriculum";
 
 export const Router = () => {
   return (
@@ -29,6 +30,7 @@ export const Router = () => {
                     <Route path="/dashboard/new-user" element={<NewUser />} />
                     <Route path="/dashboard/edit-user" element={<EditUser />} />
                     <Route path="/subscriptions/" element={<Subscription />} />
+                    <Route path="/subscriptions/curriculum" element={<Curriculum />} />
                   </Route>
                 </Routes>
               </ManagerProvider>

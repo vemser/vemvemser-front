@@ -153,10 +153,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     } catch (error) {
       console.log(error);
       // seta o valor do candidato buscado como vazio
-      setSearcheredCandidates({
-        ...searcheredCandidates,
-        idCandidato: 0,
-      } as ICandidatosElementos);
+      setSearcheredCandidates({} as ICandidatosElementos);
     } finally {
       nProgress.done();
     }
