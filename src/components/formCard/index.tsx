@@ -117,15 +117,17 @@ export const FormCompleted = () => {
 
   const pdf = data.curriculo;
 
+  const formData = new FormData();
+  formData.append("file", pdf[0]);
+
   useEffect(() => {
     createCandidate(formulario, candidato);
 
     if (pdf) {
       const idFormulario: string = localStorage.getItem("idFormulario") || "";
-      updateCurriculo(parseInt(idFormulario), pdf);
-      localStorage.clear();
+      console.log(idFormulario);
+      updateCurriculo(formData);
     }
-
   }, []);
 
   return (

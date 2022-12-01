@@ -10,18 +10,6 @@ export interface IAuthContext {
   loginDados: ILoginDados;
 }
 
-export interface ICandidateForm {
-  nome: string;
-  email: string;
-  telefone: string;
-  dataNascimento?: string;
-  rg: string;
-  estado: string;
-  cidade: string;
-  cpf: string;
-  pcd: TBoolean;
-}
-
 export interface IInscriptionForm {
   genero: string;
   orientacao: string;
@@ -48,6 +36,37 @@ export interface IInscriptionForm {
   trilhas: [];
 }
 
+export interface ICandidatos extends ICandidateForm {
+  formulario: IInscriptionForm;
+}
+
+export interface ICandidateForm {
+  nome: string;
+  email: string;
+  telefone: string;
+  dataNascimento?: string;
+  rg: string;
+  estado: string;
+  cidade: string;
+  cpf: string;
+  pcd: TBoolean;
+}
+
+export interface ICandidatosDados {
+  totalElementos: number;
+  quantidadePaginas: number;
+  pagina: number;
+  tamanho: number;
+  elementos: ICandidatosElementos[];
+}
+
+export interface ICandidatosElementos extends ICandidateForm {
+  idCandidato: number;
+  formulario: IInscriptionForm & {
+    idFormulario: number;
+  };
+}
+
 export interface IDrawerContainerProps {
   children: React.ReactNode;
   window?: () => Window;
@@ -67,13 +86,17 @@ export interface IFormCardProps {
 export interface ICandidateContext {
   setFormValues: (values: object) => void;
   getTrilhas: () => void;
-  trilhas: ITrilhas[];
-  data: IInscriptionForm & ICandidateForm;
   createCandidate: (
     formulario: IInscriptionForm,
     candidato: ICandidateForm
   ) => Promise<void>;
-  updateCurriculo: (idFormulario: number, curriculo: any) => void;
+  updateCurriculo: (curriculo: FormData) => void;
+  getCandidates: (page: number) => Promise<void>;
+  getCandidateByEmail: (email: string) => Promise<void>;
+  searcheredCandidates: ICandidatosElementos;
+  trilhas: ITrilhas[];
+  data: IInscriptionForm & ICandidateForm;
+  candidates: ICandidatosDados;
 }
 
 export interface ITrilhas {
@@ -118,8 +141,6 @@ export interface ITabelaGestorPage {
   atualPage: number;
   pageSize: number;
 }
-
-// export type ISearchColaborators = Pick<IGestor, "nome" | "email" | "tipoCargo">;
 
 export interface ISearchColaborators {
   nome?: string;

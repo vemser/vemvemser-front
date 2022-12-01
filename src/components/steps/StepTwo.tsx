@@ -66,13 +66,6 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
     formValues.trilhas = trilhas;
 
     if (curriculoIsPdf) {
-      const reader = new FileReader();
-      reader.readAsDataURL(curriculo[0]);
-      reader.onload = () => {
-        setFormValues({ ...formValues, curriculo: reader.result });
-        nextFormStep && nextFormStep();
-      };
-    } else {
       setFormValues(formValues);
       nextFormStep && nextFormStep();
     }

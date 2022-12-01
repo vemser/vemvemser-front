@@ -19,17 +19,19 @@ export const Router = () => {
         <AuthProvider>
           <ManagerProvider>
             <CandidatesProvider>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/register" element={<Candidates />} />
+              <ManagerProvider>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/register" element={<Candidates />} />
 
-                <Route element={<PrivateRoute />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/dashboard/new-user" element={<NewUser />} />
-                  <Route path="/dashboard/edit-user" element={<EditUser />} />
-                  <Route path="/subscriptions/" element={<Subscription />} />
-                </Route>
-              </Routes>
+                  <Route element={<PrivateRoute />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/dashboard/new-user" element={<NewUser />} />
+                    <Route path="/dashboard/edit-user" element={<EditUser />} />
+                    <Route path="/subscriptions/" element={<Subscription />} />
+                  </Route>
+                </Routes>
+              </ManagerProvider>
             </CandidatesProvider>
           </ManagerProvider>
         </AuthProvider>

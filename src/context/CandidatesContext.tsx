@@ -2,6 +2,8 @@ import { useState, createContext, useContext } from "react";
 import {
   ICandidateContext,
   ICandidateForm,
+  ICandidatosDados,
+  ICandidatosElementos,
   IChildren,
   IInscriptionForm,
   ITrilhas,
@@ -18,6 +20,11 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     {} as IInscriptionForm & ICandidateForm
   );
   const [trilhas, setTrilhas] = useState<ITrilhas[]>([]);
+  const [candidates, setCandidates] = useState<ICandidatosDados>(
+    {} as ICandidatosDados
+  );
+  const [searcheredCandidates, setSearcheredCandidates] =
+    useState<ICandidatosElementos>({} as ICandidatosElementos);
 
   const setFormValues = (values: object) => {
     setData((prevValues: any) => ({
@@ -41,7 +48,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
 
   const createCandidate = async (
     formulario: IInscriptionForm,
-    candidato: ICandidateForm,
+    candidato: ICandidateForm
   ) => {
     nProgress.start();
     try {
@@ -76,18 +83,17 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     }
   };
 
-  const updateCurriculo = (idFormulario: number, curriculo: any) => {
+  const updateCurriculo = (curriculo: FormData) => {
     nProgress.start();
     try {
-      const formData = new FormData();
-      formData.append("file", curriculo);
-
+      const idFormulary: string = localStorage.getItem("idFormulario") || "";
       axios
-        .post(`${baseurl}/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .put(
+          `${baseurl}/update-curriculo-by-id-formulario?idFormulario=${parseInt(
+            idFormulary
+          )}`,
+          curriculo
+        )
         .then(() => {
           toast.success("Seu currículo foi enviado com sucesso!");
           nProgress.done();
@@ -101,6 +107,58 @@ export const CandidatesProvider = ({ children }: IChildren) => {
       console.log(error);
     } finally {
       nProgress.done();
+      // remove o id do formulário do localStorage
+      localStorage.removeItem("idFormulario");
+    }
+  };
+
+  const getCandidates = async (page: number) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .get(
+          `${baseurl}/candidato/listar?pagina=${page}&tamanho=10&sort=idCandidato&order=0`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setCandidates(res.data);
+          nProgress.done();
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      nProgress.done();
+    }
+  };
+
+  const getCandidateByEmail = async (email: string) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .get(`${baseurl}/candidato/buscar-by-email?email=${email}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setSearcheredCandidates(res.data);
+          nProgress.done();
+        });
+    } catch (error) {
+      console.log(error);
+      // seta o valor do candidato buscado como vazio
+      setSearcheredCandidates({
+        ...searcheredCandidates,
+        idCandidato: 0,
+      } as ICandidatosElementos);
+    } finally {
+      nProgress.done();
     }
   };
 
@@ -111,8 +169,12 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         getTrilhas,
         createCandidate,
         updateCurriculo,
+        getCandidates,
+        getCandidateByEmail,
+        searcheredCandidates,
         data,
         trilhas,
+        candidates,
       }}
     >
       {children}
