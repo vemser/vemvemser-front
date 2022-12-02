@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
 import { ITrilhas } from "../../utils/interfaces";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const columns = [
   { field: "nome", headerName: "Nome", minWidth: 160, flex: 1 },
@@ -23,6 +23,7 @@ interface ISearchCandidateByEmail {
 
 export const Subscription = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     getCandidates,
@@ -31,19 +32,17 @@ export const Subscription = () => {
     searcheredCandidates,
   } = useCandidates();
   const { register, handleSubmit } = useForm<ISearchCandidateByEmail>();
-  const [resetSearch, setResetSearch] = useState(false);
 
   useEffect(() => {
     getCandidates(0);
   }, []);
 
   useEffect(() => {
-    console.log(candidates?.elementos);
-  }, [candidates]);
-
-  useEffect(() => {
-    console.log(searcheredCandidates);
-  }, [searcheredCandidates]);
+    //
+    if(location.pathname === "/subscriptions/") {
+      localStorage.removeItem("pdf");
+    }
+  }, [location]);
 
   const handleSearch = (data: ISearchCandidateByEmail) => {
     getCandidateByEmail(data.email);
@@ -52,19 +51,18 @@ export const Subscription = () => {
   const rows = () => {
     return candidates?.elementos?.map((candidato) => {
       return {
-        id: candidato.idCandidato,
-        nome: candidato.nome,
-        email: candidato.email,
-        telefone: candidato.telefone,
-        dataNascimento: candidato.dataNascimento,
-        trilhas: candidato.formulario.trilhas.map((trilha: ITrilhas) => {
-          return trilha.nome;
-        }),
-        turno: candidato.formulario.turno,
-        estado: candidato.estado,
-        rest: {
-          ...candidato,
-        },
+        id: candidato.idInscricao,
+        nome: candidato.candidato.nome,
+        email: candidato.candidato.email,
+        telefone: candidato.candidato.telefone,
+        dataNascimento: candidato.candidato.dataNascimento,
+        trilhas: candidato.candidato.formulario.trilhas.map(
+          (trilha: ITrilhas) => {
+            return trilha.nome;
+          }
+        ),
+        turno: candidato.candidato.formulario.turno,
+        estado: candidato.candidato.estado,
       };
     });
   };
@@ -129,7 +127,9 @@ export const Subscription = () => {
                 pageSize={10}
                 hideFooterPagination
                 onRowClick={(params) => {
-                  console.log(params.row);
+                  navigate("/subscriptions/curriculum", {
+                    state: { id: params.row.id },
+                  });
                 }}
               />
             )}

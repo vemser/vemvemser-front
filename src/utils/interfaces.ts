@@ -19,12 +19,12 @@ export interface IInscriptionForm {
   turno: "MANHA" | "TARDE" | "NOITE";
   github: string;
   desafiosBoolean: TBoolean | boolean;
-  problemasBoolean: boolean;
-  reconhecimentoBoolean: boolean;
-  altruismoBoolean: boolean;
+  problemasBoolean: boolean | TBoolean;
+  reconhecimentoBoolean: boolean | TBoolean;
+  altruismoBoolean: boolean | TBoolean;
   resposta: string;
   curriculo?: any;
-  lgpdBoolean: boolean;
+  lgpdBoolean: TBoolean | boolean;
   provaBoolean: TBoolean | boolean;
   ingles: string;
   espanhol: string;
@@ -57,13 +57,41 @@ export interface ICandidatosDados {
   quantidadePaginas: number;
   pagina: number;
   tamanho: number;
+  dataInscricao: string;
+  avaliado: TBoolean;
   elementos: ICandidatosElementos[];
 }
 
-export interface ICandidatosElementos extends ICandidateForm {
-  idCandidato: number;
-  formulario: IInscriptionForm & {
-    idFormulario: number;
+export interface ICandidatosElementos {
+  idInscricao: number;
+  candidato: ICandidateForm & {
+    idCandidato: number;
+    formulario: IInscriptionForm & {
+      idFormulario: number;
+      genero: string;
+      orientacao: string;
+      matriculado: TBoolean;
+      curso: string;
+      instituicao: string;
+      turno: "MANHA" | "TARDE" | "NOITE";
+      github: string;
+      desafios: TBoolean | boolean;
+      problemas: boolean | TBoolean;
+      reconhecimento: boolean | TBoolean;
+      altruismo: boolean | TBoolean;
+      resposta: string;
+      curriculo?: any;
+      lgpd: TBoolean | boolean;
+      prova: TBoolean | boolean;
+      ingles: string;
+      espanhol: string;
+      neurodiversidade: string;
+      efetivacao: TBoolean | boolean;
+      disponibilidade: TBoolean | boolean;
+      configuracoes: string;
+      linkedin: string;
+      trilhas: ITrilhas[];
+    };
   };
 }
 
@@ -93,10 +121,14 @@ export interface ICandidateContext {
   updateCurriculo: (curriculo: FormData) => void;
   getCandidates: (page: number) => Promise<void>;
   getCandidateByEmail: (email: string) => Promise<void>;
+  getFormularioById: (idFormulario: number) => Promise<void>;
+  getCandidateById: (idCandidato: number) => Promise<void>;
+  candidatePdf: string;
   searcheredCandidates: ICandidatosElementos;
   trilhas: ITrilhas[];
   data: IInscriptionForm & ICandidateForm;
   candidates: ICandidatosDados;
+  candidateSelected: ICandidatosElementos;
 }
 
 export interface ITrilhas {

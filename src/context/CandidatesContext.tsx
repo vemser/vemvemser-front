@@ -25,6 +25,9 @@ export const CandidatesProvider = ({ children }: IChildren) => {
   );
   const [searcheredCandidates, setSearcheredCandidates] =
     useState<ICandidatosElementos>({} as ICandidatosElementos);
+  const [candidatePdf, setCandidatePdf] = useState<string>("");
+  const [candidateSelected, setCandidateSelected] =
+    useState<ICandidatosElementos>({} as ICandidatosElementos);
 
   const setFormValues = (values: object) => {
     setData((prevValues: any) => ({
@@ -118,7 +121,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     try {
       axios
         .get(
-          `${baseurl}/candidato/listar?pagina=${page}&tamanho=10&sort=idCandidato&order=0`,
+          `${baseurl}/inscricao?pagina=${page}&tamanho=10&sort=idInscricao&order=0`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -159,6 +162,49 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     }
   };
 
+  const getFormularioById = async (idFormulario: number) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .get(
+          `${baseurl}/formulario/get-curriculo-by-id-formulario?idFormulario=${idFormulario}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          setCandidatePdf(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      nProgress.done();
+    }
+  };
+
+  const getCandidateById = async (idCandidato: number) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .get(`${baseurl}/inscricao/by-id?id=${idCandidato}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setCandidateSelected(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      nProgress.done();
+    }
+  };
+
   return (
     <CandidatesContext.Provider
       value={{
@@ -168,6 +214,10 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         updateCurriculo,
         getCandidates,
         getCandidateByEmail,
+        getFormularioById,
+        getCandidateById,
+        candidateSelected,
+        candidatePdf,
         searcheredCandidates,
         data,
         trilhas,
