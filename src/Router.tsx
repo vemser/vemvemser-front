@@ -13,6 +13,7 @@ import { Subscription } from "./pages/Subscription";
 import { AuthProvider } from "./context/AuthContext";
 import { Curriculum } from "./pages/Curriculum";
 import { AvaliationProvider } from "./context/AvaliationContext";
+import { ForgotPassword } from "./pages/ForgotPassword";
 
 export const Router = () => {
   return (
@@ -25,6 +26,10 @@ export const Router = () => {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/register" element={<Candidates />} />
+                  <Route
+                    path="/forgot-password/"
+                    element={<ForgotPassword />}
+                  />
 
                   <Route element={<PrivateRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
