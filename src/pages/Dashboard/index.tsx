@@ -11,7 +11,6 @@ import {
   Pagination,
   Skeleton,
 } from "@mui/material";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { IGestorDados, ISearchColaborators } from "../../utils/interfaces";
 import { DataGrid } from "@mui/x-data-grid";

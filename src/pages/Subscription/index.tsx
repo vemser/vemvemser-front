@@ -38,33 +38,48 @@ export const Subscription = () => {
   }, []);
 
   useEffect(() => {
-    //
-    if(location.pathname === "/subscriptions/") {
-      localStorage.removeItem("pdf");
-    }
-  }, [location]);
+    console.log(searcheredCandidates);
+  }, [searcheredCandidates]);
 
   const handleSearch = (data: ISearchCandidateByEmail) => {
     getCandidateByEmail(data.email);
   };
 
   const rows = () => {
-    return candidates?.elementos?.map((candidato) => {
-      return {
-        id: candidato.idInscricao,
-        nome: candidato.candidato.nome,
-        email: candidato.candidato.email,
-        telefone: candidato.candidato.telefone,
-        dataNascimento: candidato.candidato.dataNascimento,
-        trilhas: candidato.candidato.formulario.trilhas.map(
-          (trilha: ITrilhas) => {
-            return trilha.nome;
-          }
-        ),
-        turno: candidato.candidato.formulario.turno,
-        estado: candidato.candidato.estado,
-      };
-    });
+    if (searcheredCandidates.length > 0) {
+      return searcheredCandidates?.map((candidato) => {
+        return {
+          id: candidato.idInscricao,
+          nome: candidato.candidato.nome,
+          email: candidato.candidato.email,
+          telefone: candidato.candidato.telefone,
+          dataNascimento: candidato.candidato.dataNascimento,
+          trilhas: candidato.candidato.formulario.trilhas.map(
+            (trilha: ITrilhas) => {
+              return trilha.nome;
+            }
+          ),
+          turno: candidato.candidato.formulario.turno,
+          estado: candidato.candidato.estado,
+        };
+      });
+    } else
+      return candidates?.elementos?.map((candidato) => {
+        return {
+          id: candidato.idInscricao,
+          nome: candidato.candidato.nome,
+          email: candidato.candidato.email,
+          telefone: candidato.candidato.telefone,
+          dataNascimento: candidato.candidato.dataNascimento,
+          trilhas: candidato.candidato.formulario.trilhas.map(
+            (trilha: ITrilhas) => {
+              return trilha.nome;
+            }
+          ),
+          turno: candidato.candidato.formulario.turno,
+          estado: candidato.candidato.estado,
+        };
+      });
   };
 
   return (
@@ -124,7 +139,7 @@ export const Subscription = () => {
               <DataGrid
                 rows={rows()}
                 columns={columns}
-                pageSize={10}
+                pageSize={20}
                 hideFooterPagination
                 onRowClick={(params) => {
                   navigate("/subscriptions/curriculum", {
@@ -147,14 +162,27 @@ export const Subscription = () => {
                 alignItems: "center",
               }}
             >
-              <Pagination
-                count={candidates?.quantidadePaginas}
-                color="primary"
-                size="small"
-                onChange={(event, page) => {
-                  getCandidates(page - 1);
-                }}
-              />
+              {!searcheredCandidates.length && (
+                <Pagination
+                  count={candidates?.quantidadePaginas}
+                  color="primary"
+                  size="small"
+                  onChange={(event, page) => {
+                    getCandidates(page - 1);
+                  }}
+                />
+              )}
+
+              {searcheredCandidates.length > 0 && (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    getCandidateByEmail("");
+                  }}
+                >
+                  Limpar busca
+                </Button>
+              )}
             </Box>
           </Box>
         </Grid>

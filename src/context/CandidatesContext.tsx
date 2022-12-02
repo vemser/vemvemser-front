@@ -24,7 +24,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     {} as ICandidatosDados
   );
   const [searcheredCandidates, setSearcheredCandidates] =
-    useState<ICandidatosElementos>({} as ICandidatosElementos);
+    useState<ICandidatosElementos[]>({} as ICandidatosElementos[]);
   const [candidatePdf, setCandidatePdf] = useState<string>("");
   const [candidateSelected, setCandidateSelected] =
     useState<ICandidatosElementos>({} as ICandidatosElementos);
@@ -121,7 +121,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     try {
       axios
         .get(
-          `${baseurl}/inscricao?pagina=${page}&tamanho=10&sort=idInscricao&order=0`,
+          `${baseurl}/inscricao?pagina=${page}&tamanho=20&sort=idInscricao&order=0`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -144,19 +144,17 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     nProgress.start();
     try {
       axios
-        .get(`${baseurl}/candidato/buscar-by-email?email=${email}`, {
+        .get(`${baseurl}/inscricao/buscar-by-email?email=${email}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
           setSearcheredCandidates(res.data);
-          nProgress.done();
         });
     } catch (error) {
       console.log(error);
-      // seta o valor do candidato buscado como vazio
-      setSearcheredCandidates({} as ICandidatosElementos);
+      toast.error("Erro ao buscar candidato");
     } finally {
       nProgress.done();
     }

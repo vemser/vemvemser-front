@@ -124,7 +124,7 @@ export interface ICandidateContext {
   getFormularioById: (idFormulario: number) => Promise<void>;
   getCandidateById: (idCandidato: number) => Promise<void>;
   candidatePdf: string;
-  searcheredCandidates: ICandidatosElementos;
+  searcheredCandidates: ICandidatosElementos[];
   trilhas: ITrilhas[];
   data: IInscriptionForm & ICandidateForm;
   candidates: ICandidatosDados;
