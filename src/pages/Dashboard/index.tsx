@@ -172,9 +172,10 @@ export const Dashboard: React.FC = () => {
             }
             hideFooterPagination
             onRowClick={async (params) => {
-              navigate(`/dashboard/edit-user`, {
-                state: params.row,
-              });
+              gestorLogado?.cargoDto?.idCargo === 1 &&
+                navigate(`/dashboard/edit-user`, {
+                  state: params.row,
+                });
             }}
           />
         )}

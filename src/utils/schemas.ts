@@ -122,3 +122,20 @@ export const userEditSchema = yup.object().shape({
       "Só é válido o email com @dbccompany.com.br"
     ),
 });
+
+export const recoverSchema = yup.object().shape({
+  senha: yup
+    .string()
+    .required("Senha obrigatória")
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .matches(/^(?=.*[A-Z])/, "A senha deve ter no mínimo 1 letra maiúscula")
+    .matches(/^(?=.*[a-z])/, "A senha deve ter no mínimo 1 letra minúscula")
+    .matches(/^(?=.*[0-9])/, "A senha deve ter no mínimo 1 número")
+    .matches(
+      /^(?=.*[!@#$%^&*])/,
+      "A senha deve ter no mínimo 1 caracter especial"
+    ),
+  confirmarSenha: yup
+    .string()
+    .oneOf([yup.ref("senha"), null], "As senhas devem ser iguais"),
+});

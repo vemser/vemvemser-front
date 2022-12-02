@@ -16,14 +16,15 @@ import { useForm } from "react-hook-form";
 import { IGestor } from "../../utils/interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userEditSchema } from "../../utils/schemas";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const EditUser: React.FC = () => {
   const { state } = useLocation();
   const { gestorLogado, deleteManager, editManager } = useManager();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -40,19 +41,27 @@ export const EditUser: React.FC = () => {
   } = useForm<IGestor>({
     resolver: yupResolver(userEditSchema),
     defaultValues: {
-      nome: state.nome,
-      email: state.email,
-      tipoCargo: state.tipoCargo.toString(),
+      nome: state?.nome,
+      email: state?.email,
+      tipoCargo: state?.tipoCargo.toString(),
     },
   });
 
   const handleEditUser = (data: IGestor) => {
-    editManager(state.id, {
-      nome: data.nome,
-      email: data.email,
-      tipoCargo: data.tipoCargo,
+    editManager(state?.id, {
+      nome: data?.nome,
+      email: data?.email,
+      tipoCargo: data?.tipoCargo,
     });
   };
+
+  useEffect(() => {
+    if (gestorLogado?.cargoDto?.idCargo !== 1) {
+      navigate("/dashboard");
+    }
+
+    console.log("teste");
+  }, [gestorLogado]);
 
   return (
     <Stack maxWidth="lg" m="0 auto">

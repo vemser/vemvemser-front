@@ -10,7 +10,7 @@ export const ForgotPassword = () => {
   useEffect(() => {
     if (tokenRecuperarSenha) {
       localStorage.setItem("recuperarSenha", tokenRecuperarSenha);
-      navigate("/redefinir-senha");
+      navigate("/recover-password/");
     }
   }, [tokenRecuperarSenha]);
   return <div>ForgotPassword</div>;

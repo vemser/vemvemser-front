@@ -228,3 +228,8 @@ export interface IManagerContext {
   gestorLogado: IGestorDados;
   filteredManagers: IGestorDados[];
 }
+
+export interface IRecover {
+  senha: string;
+  confirmarSenha: string;
+}
