@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ISearchByEmail } from "../../utils/interfaces";
 
 const columns = [
   { field: "avaliado", headerName: "Status", minWidth: 160, flex: 1 },
@@ -16,9 +17,6 @@ const columns = [
   { field: "estado", headerName: "Estado", width: 140 },
 ];
 
-interface ISearchCandidateByEmail {
-  email: string;
-}
 
 export const Subscription = () => {
   const navigate = useNavigate();
@@ -30,13 +28,13 @@ export const Subscription = () => {
     candidates,
     searcheredCandidates,
   } = useCandidates();
-  const { register, handleSubmit } = useForm<ISearchCandidateByEmail>();
+  const { register, handleSubmit } = useForm<ISearchByEmail>();
 
   useEffect(() => {
     getCandidates(0);
   }, []);
 
-  const handleSearch = (data: ISearchCandidateByEmail) => {
+  const handleSearch = (data: ISearchByEmail) => {
     getCandidateByEmail(data.email);
   };
 

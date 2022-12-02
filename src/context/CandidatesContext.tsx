@@ -52,7 +52,8 @@ export const CandidatesProvider = ({ children }: IChildren) => {
 
   const createCandidate = async (
     formulario: IInscriptionForm,
-    candidato: ICandidateForm
+    candidato: ICandidateForm,
+    curriculo?: any
   ) => {
     nProgress.start();
     try {
@@ -63,7 +64,26 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         )
         .then((response) => {
           const idFormulario = response.data.idFormulario;
-          localStorage.setItem("idFormulario", idFormulario);
+          // localStorage.setItem("idFormulario", idFormulario);
+
+          if (curriculo) {
+            axios
+              .put(
+                `${baseurl}/formulario/curriculo/${idFormulario}`,
+                curriculo,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                }
+              )
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
 
           axios
             .post(`${baseurl}/candidato/cadastro`, {
@@ -110,7 +130,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
           nProgress.done();
         })
         .catch((err) => {
-          // toast.error(err.response?.data?.errors[0]);
           console.log(err);
           nProgress.done();
         });
@@ -118,8 +137,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
       console.log(error);
     } finally {
       nProgress.done();
-      // remove o id do formulário do localStorage
-      localStorage.removeItem("idFormulario");
     }
   };
 

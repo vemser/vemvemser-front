@@ -95,19 +95,19 @@ export interface ICandidatosElementos {
   };
 }
 
+export interface IAvaliationCandidate {
+  idAvaliacao: number;
+  aprovado: TBoolean;
+  avaliador: IGestorDados;
+  inscricao: ICandidatosElementos;
+}
+
 export interface IAvaliation {
   totalElementos: number;
   quantidadePaginas: number;
   pagina: number;
   tamanho: number;
-  elementos: [
-    {
-      idAvaliado: 0;
-      aprovado: TBoolean;
-      avaliador: IGestorDados;
-      inscricao: ICandidatosElementos;
-    }
-  ];
+  elementos: IAvaliationCandidate[];
 }
 
 export interface IDrawerContainerProps {
@@ -131,7 +131,8 @@ export interface ICandidateContext {
   getTrilhas: () => void;
   createCandidate: (
     formulario: IInscriptionForm,
-    candidato: ICandidateForm
+    candidato: ICandidateForm,
+    curriculo?: any
   ) => Promise<void>;
   updateCurriculo: (curriculo: FormData) => void;
   getCandidates: (page: number) => Promise<void>;
@@ -152,12 +153,18 @@ export interface IAvaliationContext {
     idInscricao: number
   ) => Promise<void>;
   getAvaliations: (page: number) => Promise<void>;
+  getAvaliationByEmail: (email: string) => Promise<void>;
+  searcheredAvaliation: IAvaliationCandidate[];
   avaliationData: IAvaliation;
 }
 
 export interface ITrilhas {
   idTrilha: number;
   nome: string;
+}
+
+export interface ISearchByEmail {
+  email: string;
 }
 
 export interface IChildren {

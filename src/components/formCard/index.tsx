@@ -121,13 +121,12 @@ export const FormCompleted = () => {
   formData.append("file", pdf[0]);
 
   useEffect(() => {
-    createCandidate(formulario, candidato);
-
     if (pdf) {
-      const idFormulario: string = localStorage.getItem("idFormulario") || "";
-      console.log(idFormulario);
-      updateCurriculo(formData);
+      createCandidate(formulario, candidato, pdf);
+    } else {
+      createCandidate(formulario, candidato);
     }
+    console.log(formData);
   }, []);
 
   return (

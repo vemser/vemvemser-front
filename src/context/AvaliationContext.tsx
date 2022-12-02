@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { baseurl } from "../utils/baseurl";
 import axios from "axios";
 import nProgress from "nprogress";
-import { IAvaliationContext, IChildren } from "../utils/interfaces";
+import { IAvaliationCandidate, IAvaliationContext, IChildren } from "../utils/interfaces";
 import { IAvaliation } from "../utils/interfaces";
 
 export const AvaliationContext = createContext({} as IAvaliationContext);
@@ -11,6 +11,9 @@ export const AvaliationContext = createContext({} as IAvaliationContext);
 export const AvaliationProvider = ({ children }: IChildren) => {
   const [avaliationData, setAvaliationData] = useState<IAvaliation>(
     {} as IAvaliation
+  );
+  const [searcheredAvaliation, setSearcheredAvaliation] = useState<IAvaliationCandidate[]>(
+    {} as IAvaliationCandidate[]
   );
   const registerAvaliation = async (
     aprovadoBoolean: boolean,
@@ -73,11 +76,35 @@ export const AvaliationProvider = ({ children }: IChildren) => {
       nProgress.done();
     }
   };
+
+  const getAvaliationByEmail = async (email: string) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .get(`${baseurl}/avaliacao/buscar-by-email?email=${email}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setSearcheredAvaliation(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao buscar candidato");
+    } finally {
+      nProgress.done();
+    }
+  };
+
   return (
     <AvaliationContext.Provider
       value={{
         registerAvaliation,
         getAvaliations,
+        getAvaliationByEmail,
+        searcheredAvaliation,
         avaliationData,
       }}
     >

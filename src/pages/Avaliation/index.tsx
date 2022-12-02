@@ -1,12 +1,20 @@
 import { Box, Button, Grid, Pagination, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
-import { IAvaliation } from "../../utils/interfaces";
+import { IAvaliation, ISearchByEmail } from "../../utils/interfaces";
 import React, { useEffect } from "react";
 import { useAvaliation } from "../../context/AvaliationContext";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export const Avaliation = () => {
-  const { getAvaliations, avaliationData } = useAvaliation();
+  const {
+    getAvaliations,
+    getAvaliationByEmail,
+    avaliationData,
+    searcheredAvaliation,
+  } = useAvaliation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAvaliations(0);
@@ -45,18 +53,42 @@ export const Avaliation = () => {
     },
   ];
 
+  const { register, handleSubmit } = useForm<ISearchByEmail>();
+
+  const handleSearch = (data: ISearchByEmail) => {
+    getAvaliationByEmail(data.email);
+  };
+
+  useEffect(() => {
+    console.log(searcheredAvaliation);
+  }, [searcheredAvaliation]);
+
   const rows = () => {
-    return avaliationData?.elementos?.map((avaliacao) => {
-      return {
-        id: avaliacao.inscricao.candidato.idCandidato,
-        aprovado: avaliacao.aprovado === "T" ? "Aprovado" : "Reprovado",
-        nomeCandidato: avaliacao.inscricao.candidato.nome,
-        emailCandidato: avaliacao.inscricao.candidato.email,
-        nomeAvaliador: avaliacao.avaliador.nome,
-        emailAvliador: avaliacao.avaliador.email,
-        telefoneCandidato: avaliacao.inscricao.candidato.telefone,
-      };
-    });
+    if (searcheredAvaliation.length > 0) {
+      return searcheredAvaliation?.map((avaliacao) => {
+        return {
+          id: avaliacao.idAvaliacao,
+          aprovado: avaliacao.aprovado === "T" ? "Aprovado" : "Reprovado",
+          nomeCandidato: avaliacao.inscricao.candidato.nome,
+          emailCandidato: avaliacao.inscricao.candidato.email,
+          nomeAvaliador: avaliacao.avaliador.nome,
+          emailAvliador: avaliacao.avaliador.email,
+          telefoneCandidato: avaliacao.inscricao.candidato.telefone,
+        };
+      });
+    } else {
+      return avaliationData?.elementos?.map((avaliacao) => {
+        return {
+          id: avaliacao.inscricao.idInscricao,
+          aprovado: avaliacao.aprovado === "T" ? "Aprovado" : "Reprovado",
+          nomeCandidato: avaliacao.inscricao.candidato.nome,
+          emailCandidato: avaliacao.inscricao.candidato.email,
+          nomeAvaliador: avaliacao.avaliador.nome,
+          emailAvliador: avaliacao.avaliador.email,
+          telefoneCandidato: avaliacao.inscricao.candidato.telefone,
+        };
+      });
+    }
   };
 
   return (
@@ -71,6 +103,36 @@ export const Avaliation = () => {
       m="0 auto"
     >
       <Grid container spacing={2}>
+        <Grid
+          item
+          xs={12}
+          component="form"
+          onSubmit={handleSubmit(handleSearch)}
+        >
+          <Stack direction="row" spacing={2}>
+            <TextField
+              sx={{ width: "100%" }}
+              label="Pesquisar por email"
+              id="registros-pesquisar"
+              {...register("email")}
+              InputProps={{
+                startAdornment: (
+                  <Box display="flex" alignItems="center" mr={1}>
+                    <MagnifyingGlass
+                      size={20}
+                      color="var(--primary)"
+                      weight="bold"
+                    />
+                  </Box>
+                ),
+              }}
+            />
+            <Button variant="contained" color="primary" type="submit">
+              Buscar
+            </Button>
+          </Stack>
+        </Grid>
+
         <Grid item xs={12}>
           <Box
             sx={{
@@ -87,6 +149,11 @@ export const Avaliation = () => {
                 rows={rows()}
                 columns={columns}
                 pageSize={20}
+                onRowClick={(params) => {
+                  navigate("/subscriptions/curriculum", {
+                    state: { id: params.row.id },
+                  });
+                }}
                 hideFooterPagination
               />
             )}
