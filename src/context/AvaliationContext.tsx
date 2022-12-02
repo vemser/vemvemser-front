@@ -55,7 +55,7 @@ export const AvaliationProvider = ({ children }: IChildren) => {
     try {
       await axios
         .get(
-          `${baseurl}/avaliacao?pagina=${page}&tamanho=20&sort=idAvaliacao&order=0`,
+          `${baseurl}/avaliacao?pagina=${page}&tamanho=20&sort=aprovado&order=1`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

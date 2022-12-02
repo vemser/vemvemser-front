@@ -129,7 +129,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     try {
       await axios
         .get(
-          `${baseurl}/inscricao?pagina=${page}&tamanho=20&sort=idInscricao&order=0`,
+          `${baseurl}/inscricao?pagina=${page}&tamanho=20&sort=avaliado&order=0`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
