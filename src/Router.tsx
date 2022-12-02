@@ -15,6 +15,7 @@ import { Curriculum } from "./pages/Curriculum";
 import { AvaliationProvider } from "./context/AvaliationContext";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { Recover } from "./pages/Recover";
+import { Avaliation } from "./pages/Avaliation";
 
 export const Router = () => {
   return (
@@ -31,10 +32,7 @@ export const Router = () => {
                     path="/forgot-password/"
                     element={<ForgotPassword />}
                   />
-                  <Route
-                    path="/recover-password/"
-                    element={<Recover />}
-                  />
+                  <Route path="/recover-password/" element={<Recover />} />
 
                   <Route element={<PrivateRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
@@ -45,6 +43,7 @@ export const Router = () => {
                       path="/subscriptions/curriculum"
                       element={<Curriculum />}
                     />
+                    <Route path="/avaliations" element={<Avaliation />} />
                   </Route>
                 </Routes>
               </AvaliationProvider>

@@ -12,4 +12,8 @@ export const menuItems: MenuItem[] = [
     text: "Inscrições",
     path: "/subscriptions",
   },
+  {
+    text: "Avaliações",
+    path: "/avaliations",
+  }
 ];
