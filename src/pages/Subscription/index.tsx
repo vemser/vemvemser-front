@@ -1,4 +1,4 @@
-import { Stack, Grid, TextField, Box, Button, Pagination } from "@mui/material";
+import { Stack, Grid, TextField, Box, Button, Pagination, Skeleton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
 import { useEffect, useState } from "react";
@@ -120,7 +120,7 @@ export const Subscription = () => {
               gap: 2,
             }}
           >
-            {candidates.elementos && (
+            {candidates.elementos ? (
               <DataGrid
                 rows={rows()}
                 columns={columns}
@@ -132,7 +132,7 @@ export const Subscription = () => {
                   });
                 }}
               />
-            )}
+            ) : <Skeleton variant="rectangular" animation="wave" height={400} />}
 
             <Box
               sx={{

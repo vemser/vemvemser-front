@@ -64,26 +64,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         )
         .then((response) => {
           const idFormulario = response.data.idFormulario;
-          // localStorage.setItem("idFormulario", idFormulario);
-
-          if (curriculo) {
-            axios
-              .put(
-                `${baseurl}/formulario/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`,
-                curriculo,
-                {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                }
-              )
-              .then((response) => {
-                console.log(response);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }
 
           axios
             .post(`${baseurl}/candidato/cadastro`, {
@@ -99,6 +79,26 @@ export const CandidatesProvider = ({ children }: IChildren) => {
                 })
                 .then(() => {
                   toast.success("Seu formulário foi enviado com sucesso!");
+
+                  // put do curriculo
+                  if (curriculo) {
+                    axios
+                      .put(
+                        `${baseurl}/formulario/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`,
+                        curriculo,
+                        {
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
+                        }
+                      )
+                      .then((response) => {
+                        console.log("Enviou PDF:" + response);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  }
                 });
             })
             .catch((err) => {

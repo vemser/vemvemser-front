@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Pagination, Stack, TextField } from "@mui/material";
+import { Box, Button, Grid, Pagination, Stack, TextField, Skeleton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
 import { IAvaliation, ISearchByEmail } from "../../utils/interfaces";
@@ -144,7 +144,7 @@ export const Avaliation = () => {
               gap: 2,
             }}
           >
-            {avaliationData.elementos && (
+            {avaliationData.elementos ? (
               <DataGrid
                 rows={rows()}
                 columns={columns}
@@ -156,7 +156,7 @@ export const Avaliation = () => {
                 }}
                 hideFooterPagination
               />
-            )}
+            ) : <Skeleton variant="rectangular" animation="wave" height={400} />}
 
             <Box
               sx={{
