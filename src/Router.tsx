@@ -14,6 +14,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { Curriculum } from "./pages/Curriculum";
 import { AvaliationProvider } from "./context/AvaliationContext";
 import { ForgotPassword } from "./pages/ForgotPassword";
+import { Recover } from "./pages/Recover";
 
 export const Router = () => {
   return (
@@ -29,6 +30,10 @@ export const Router = () => {
                   <Route
                     path="/forgot-password/"
                     element={<ForgotPassword />}
+                  />
+                  <Route
+                    path="/recover-password/"
+                    element={<Recover />}
                   />
 
                   <Route element={<PrivateRoute />}>

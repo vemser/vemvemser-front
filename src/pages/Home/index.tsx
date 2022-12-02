@@ -6,19 +6,35 @@ import {
   Stack,
   TextField,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ILogin } from "../../utils/interfaces";
 import { loginSchema } from "../../utils/schemas";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import logoDbc from "../../assets/logo-white.svg";
 import { useAuth } from "../../context/AuthContext";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
+
+  const [open, setOpen] = useState(false);
+  const [emailRecover, setEmailRecover] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,7 +50,7 @@ export const Home: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<ILogin>({
-    // resolver: yupResolver(loginSchema),
+    resolver: yupResolver(loginSchema),
   });
 
   const handleLogin = (data: ILogin) => {
@@ -123,6 +139,51 @@ export const Home: React.FC = () => {
                 >
                   Entrar
                 </Button>
+                <Button
+                  color="primary"
+                  id="home-recuperar-conta"
+                  onClick={handleClickOpen}
+                >
+                  Recuperar conta
+                </Button>
+
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>Recuperar conta</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Após digitar o email, aguarde pelo email que será enviado
+                      ao mesmo cadastrado.
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="recuperar-email"
+                      label="Email"
+                      type="email"
+                      fullWidth
+                      variant="filled"
+                      onChange={(e) => setEmailRecover(e.target.value)}
+                    />
+                  </DialogContent>
+                  <Typography sx={{ ml: 3 }} variant="caption" color="error">
+                    {!emailRecover.includes("@dbccompany.com.br") &&
+                      "O email deve ser do domínio @dbccompany.com.br"}
+                  </Typography>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button
+                      disabled={!emailRecover.includes("@dbccompany.com.br")}
+                      onClick={() => {
+                        // handleClose();
+                        if (emailRecover.includes("@dbccompany.com.br")) {
+                          console.log(emailRecover);
+                        }
+                      }}
+                    >
+                      Enviar email
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Stack>
             </Box>
           </Grid>
