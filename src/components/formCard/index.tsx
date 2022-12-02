@@ -117,8 +117,6 @@ export const FormCompleted = () => {
 
   const pdf = data.curriculo;
 
-
-
   useEffect(() => {
     const formData = new FormData();
     formData.append("file", pdf[0]);

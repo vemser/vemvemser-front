@@ -69,7 +69,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
           if (curriculo) {
             axios
               .put(
-                `${baseurl}/formulario/curriculo/${idFormulario}`,
+                `${baseurl}/formulario/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`,
                 curriculo,
                 {
                   headers: {

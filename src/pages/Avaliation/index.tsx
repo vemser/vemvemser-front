@@ -171,14 +171,26 @@ export const Avaliation = () => {
                 alignItems: "center",
               }}
             >
-              <Pagination
-                count={avaliationData?.quantidadePaginas}
-                color="primary"
-                size="small"
-                onChange={(event, page) => {
-                  getAvaliations(page - 1);
-                }}
-              />
+              {!searcheredAvaliation.length && (
+                <Pagination
+                  count={avaliationData?.quantidadePaginas}
+                  color="primary"
+                  size="small"
+                  onChange={(event, page) => {
+                    getAvaliations(page - 1);
+                  }}
+                />
+              )}
+              {searcheredAvaliation.length > 0 && (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    getAvaliationByEmail("");
+                  }}
+                >
+                  Limpar busca
+                </Button>
+              )}
             </Box>
           </Box>
         </Grid>
