@@ -36,10 +36,6 @@ export const Subscription = () => {
     getCandidates(0);
   }, []);
 
-  useEffect(() => {
-    console.log(searcheredCandidates);
-  }, [searcheredCandidates]);
-
   const handleSearch = (data: ISearchCandidateByEmail) => {
     getCandidateByEmail(data.email);
   };

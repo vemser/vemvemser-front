@@ -3,18 +3,15 @@ import { toast } from "react-toastify";
 import { baseurl } from "../utils/baseurl";
 import axios from "axios";
 import nProgress from "nprogress";
-import { IChildren } from "../utils/interfaces";
-
-export interface IAvaliationContext {
-  registerAvaliation: (
-    aprovadoBoolean: boolean,
-    idInscricao: number
-  ) => Promise<void>;
-}
+import { IAvaliationContext, IChildren } from "../utils/interfaces";
+import { IAvaliation } from "../utils/interfaces";
 
 export const AvaliationContext = createContext({} as IAvaliationContext);
 
 export const AvaliationProvider = ({ children }: IChildren) => {
+  const [avaliationData, setAvaliationData] = useState<IAvaliation>(
+    {} as IAvaliation
+  );
   const registerAvaliation = async (
     aprovadoBoolean: boolean,
     idInscricao: number
@@ -36,7 +33,11 @@ export const AvaliationProvider = ({ children }: IChildren) => {
           }
         )
         .then(() => {
-          toast.success(aprovadoBoolean ? "Você aprovou a inscrição!" : "Você reprovou a inscrição!");
+          toast.success(
+            aprovadoBoolean
+              ? "Você aprovou a inscrição!"
+              : "Você reprovou a inscrição!"
+          );
         });
     } catch (error) {
       //   toast.error(error.response.data.message);
@@ -47,10 +48,37 @@ export const AvaliationProvider = ({ children }: IChildren) => {
       nProgress.done();
     }
   };
+
+  const getAvaliations = async (page: number) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      await axios
+        .get(
+          `${baseurl}/avaliacao?pagina=${page}&tamanho=20&sort=idAvaliacao&order=0`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          setAvaliationData(response.data);
+          nProgress.done();
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      nProgress.done();
+    }
+  };
   return (
     <AvaliationContext.Provider
       value={{
         registerAvaliation,
+        getAvaliations,
+        avaliationData,
       }}
     >
       {children}

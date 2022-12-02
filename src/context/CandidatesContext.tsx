@@ -127,7 +127,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
     const token = localStorage.getItem("token");
     nProgress.start();
     try {
-      axios
+      await axios
         .get(
           `${baseurl}/inscricao?pagina=${page}&tamanho=20&sort=idInscricao&order=0`,
           {

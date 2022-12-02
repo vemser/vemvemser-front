@@ -95,6 +95,21 @@ export interface ICandidatosElementos {
   };
 }
 
+export interface IAvaliation {
+  totalElementos: number;
+  quantidadePaginas: number;
+  pagina: number;
+  tamanho: number;
+  elementos: [
+    {
+      idAvaliado: 0;
+      aprovado: TBoolean;
+      avaliador: IGestorDados;
+      inscricao: ICandidatosElementos;
+    }
+  ];
+}
+
 export interface IDrawerContainerProps {
   children: React.ReactNode;
   window?: () => Window;
@@ -129,6 +144,15 @@ export interface ICandidateContext {
   data: IInscriptionForm & ICandidateForm;
   candidates: ICandidatosDados;
   candidateSelected: ICandidatosElementos;
+}
+
+export interface IAvaliationContext {
+  registerAvaliation: (
+    aprovadoBoolean: boolean,
+    idInscricao: number
+  ) => Promise<void>;
+  getAvaliations: (page: number) => Promise<void>;
+  avaliationData: IAvaliation;
 }
 
 export interface ITrilhas {
