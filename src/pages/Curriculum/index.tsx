@@ -1,6 +1,14 @@
-// import { Grid, Stack, Typography } from '@mui/material'
-import { Stack, Grid, Typography, Paper, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {
+  Stack,
+  Grid,
+  Typography,
+  Paper,
+  Button,
+  Divider,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { getFilePlugin, RenderDownloadProps } from "@react-pdf-viewer/get-file";
@@ -8,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import { ITrilhas } from "../../utils/interfaces";
+import { useAvaliation } from "../../context/AvaliationContext";
 
 export const PessoalInformation: React.FC<{
   title: string;
@@ -35,13 +44,22 @@ export const Curriculum: React.FC = () => {
     candidatePdf,
     candidateSelected,
   } = useCandidates();
+  const { registerAvaliation } = useAvaliation();
 
   const [formattedCandidatePdf, setFormattedCandidatePdf] =
     useState<string>("null");
-
   const { state } = useLocation();
-  const location = useLocation();
-  // console.log(state);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const buttonAvaliar = document.querySelector("#buttonAvaliar");
 
   const base64toBlob = (data: string) => {
     const byteString = atob(data);
@@ -66,7 +84,7 @@ export const Curriculum: React.FC = () => {
     const url = URL.createObjectURL(blob);
 
     setFormattedCandidatePdf(url);
-    console.log(candidateSelected?.candidato?.formulario)
+    console.log(candidateSelected);
   }, [candidatePdf]);
 
   const { candidato } = candidateSelected;
@@ -84,10 +102,55 @@ export const Curriculum: React.FC = () => {
       m="0 auto"
     >
       <Grid container spacing={2}>
+        <Grid item xs={6}>
+          {candidateSelected.avaliado && (
+            <>
+              <Button
+                variant="contained"
+                disabled={candidateSelected.avaliado === "T"}
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                id="buttonAvaliar"
+                onClick={handleClick}
+              >
+                {candidateSelected.avaliado === "T" ? "Avaliado" : "Avaliar"}
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    registerAvaliation(true, candidateSelected.idInscricao);
+                    buttonAvaliar?.remove();
+                    handleClose();
+                  }}
+                >
+                  Aprovar
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    registerAvaliation(false, candidateSelected.idInscricao);
+                    buttonAvaliar?.remove();
+                    handleClose();
+                  }}
+                >
+                  Reprovar
+                </MenuItem>
+              </Menu>
+            </>
+          )}
+        </Grid>
         {candidatePdf !== "" && (
           <Grid
             item
-            xs={12}
+            xs={6}
             sx={{
               display: "flex",
               justifyContent: "flex-end",
@@ -104,7 +167,9 @@ export const Curriculum: React.FC = () => {
             </Download>
           </Grid>
         )}
-
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
         <Grid
           container
           item
@@ -197,9 +262,7 @@ export const Curriculum: React.FC = () => {
                 />
                 <PessoalInformation
                   title="Gosta do reconhecimento da área:"
-                  value={
-                    formulario?.reconhecimento === "F" ? "Não" : "Sim"
-                  }
+                  value={formulario?.reconhecimento === "F" ? "Não" : "Sim"}
                 />
                 <PessoalInformation
                   title="Quer ajudar as pessoas:"
@@ -215,9 +278,7 @@ export const Curriculum: React.FC = () => {
                 />
                 <PessoalInformation
                   title="Disponibilidade de estudo:"
-                  value={
-                    formulario?.disponibilidade === "F" ? "Não" : "Sim"
-                  }
+                  value={formulario?.disponibilidade === "F" ? "Não" : "Sim"}
                 />
                 <PessoalInformation
                   title="Trilhas:"
@@ -229,11 +290,18 @@ export const Curriculum: React.FC = () => {
                   title="Hardware:"
                   value={formulario?.configuracoes}
                 />
-                <PessoalInformation title="Linkedin:" value={formulario?.linkedin} />
-                <PessoalInformation title="Github:" value={formulario?.github} />
-                <PessoalInformation title="LGPD:" value={
-                  formulario?.lgpdBoolean === "F" ? "Não" : "Sim"
-                } />
+                <PessoalInformation
+                  title="Linkedin:"
+                  value={formulario?.linkedin}
+                />
+                <PessoalInformation
+                  title="Github:"
+                  value={formulario?.github}
+                />
+                <PessoalInformation
+                  title="LGPD:"
+                  value={formulario?.lgpdBoolean === "F" ? "Não" : "Sim"}
+                />
               </Grid>
             </Paper>
           </Grid>

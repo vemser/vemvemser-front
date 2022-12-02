@@ -12,6 +12,7 @@ import { ManagerProvider } from "./context/ManagerContext";
 import { Subscription } from "./pages/Subscription";
 import { AuthProvider } from "./context/AuthContext";
 import { Curriculum } from "./pages/Curriculum";
+import { AvaliationProvider } from "./context/AvaliationContext";
 
 export const Router = () => {
   return (
@@ -20,7 +21,7 @@ export const Router = () => {
         <AuthProvider>
           <ManagerProvider>
             <CandidatesProvider>
-              <ManagerProvider>
+              <AvaliationProvider>
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/register" element={<Candidates />} />
@@ -30,10 +31,13 @@ export const Router = () => {
                     <Route path="/dashboard/new-user" element={<NewUser />} />
                     <Route path="/dashboard/edit-user" element={<EditUser />} />
                     <Route path="/subscriptions/" element={<Subscription />} />
-                    <Route path="/subscriptions/curriculum" element={<Curriculum />} />
+                    <Route
+                      path="/subscriptions/curriculum"
+                      element={<Curriculum />}
+                    />
                   </Route>
                 </Routes>
-              </ManagerProvider>
+              </AvaliationProvider>
             </CandidatesProvider>
           </ManagerProvider>
         </AuthProvider>

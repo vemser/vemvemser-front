@@ -57,13 +57,13 @@ export interface ICandidatosDados {
   quantidadePaginas: number;
   pagina: number;
   tamanho: number;
-  dataInscricao: string;
-  avaliado: TBoolean;
   elementos: ICandidatosElementos[];
 }
 
 export interface ICandidatosElementos {
   idInscricao: number;
+  dataInscricao: string;
+  avaliado: TBoolean;
   candidato: ICandidateForm & {
     idCandidato: number;
     formulario: IInscriptionForm & {

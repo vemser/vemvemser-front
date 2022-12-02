@@ -3,16 +3,15 @@ import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
-import { ITrilhas } from "../../utils/interfaces";
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const columns = [
+  { field: "avaliado", headerName: "Status", minWidth: 160, flex: 1 },
   { field: "nome", headerName: "Nome", minWidth: 160, flex: 1 },
   { field: "email", headerName: "Email", minWidth: 160, flex: 1 },
   { field: "telefone", headerName: "Telefone", width: 150 },
   { field: "dataNascimento", headerName: "Data de Nascimento", width: 130 },
-  { field: "trilhas", headerName: "Trilhas", width: 120 },
   { field: "turno", headerName: "Turno", width: 140 },
   { field: "estado", headerName: "Estado", width: 140 },
 ];
@@ -50,15 +49,11 @@ export const Subscription = () => {
       return searcheredCandidates?.map((candidato) => {
         return {
           id: candidato.idInscricao,
+          avaliado: candidato.avaliado === "T" ? "Avaliado" : "Não avaliado",
           nome: candidato.candidato.nome,
           email: candidato.candidato.email,
           telefone: candidato.candidato.telefone,
           dataNascimento: candidato.candidato.dataNascimento,
-          trilhas: candidato.candidato.formulario.trilhas.map(
-            (trilha: ITrilhas) => {
-              return trilha.nome;
-            }
-          ),
           turno: candidato.candidato.formulario.turno,
           estado: candidato.candidato.estado,
         };
@@ -67,15 +62,11 @@ export const Subscription = () => {
       return candidates?.elementos?.map((candidato) => {
         return {
           id: candidato.idInscricao,
+          avaliado: candidato.avaliado === "T" ? "Avaliado" : "Não Avaliado",
           nome: candidato.candidato.nome,
           email: candidato.candidato.email,
           telefone: candidato.candidato.telefone,
           dataNascimento: candidato.candidato.dataNascimento,
-          trilhas: candidato.candidato.formulario.trilhas.map(
-            (trilha: ITrilhas) => {
-              return trilha.nome;
-            }
-          ),
           turno: candidato.candidato.formulario.turno,
           estado: candidato.candidato.estado,
         };

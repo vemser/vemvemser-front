@@ -23,8 +23,9 @@ export const CandidatesProvider = ({ children }: IChildren) => {
   const [candidates, setCandidates] = useState<ICandidatosDados>(
     {} as ICandidatosDados
   );
-  const [searcheredCandidates, setSearcheredCandidates] =
-    useState<ICandidatosElementos[]>({} as ICandidatosElementos[]);
+  const [searcheredCandidates, setSearcheredCandidates] = useState<
+    ICandidatosElementos[]
+  >({} as ICandidatosElementos[]);
   const [candidatePdf, setCandidatePdf] = useState<string>("");
   const [candidateSelected, setCandidateSelected] =
     useState<ICandidatosElementos>({} as ICandidatosElementos);
@@ -69,9 +70,16 @@ export const CandidatesProvider = ({ children }: IChildren) => {
               ...candidato,
               idFormulario,
             })
-            .then(() => {
-              toast.success("Seu formulário foi enviado com sucesso!");
+            .then((response) => {
               nProgress.done();
+
+              axios
+                .post(`${baseurl}/inscricao/cadastro`, {
+                  idCandidato: response.data.idCandidato,
+                })
+                .then(() => {
+                  toast.success("Seu formulário foi enviado com sucesso!");
+                });
             })
             .catch((err) => {
               // toast.error(err.response?.data?.errors[0]);
