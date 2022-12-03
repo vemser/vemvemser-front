@@ -46,8 +46,8 @@ export const Subscription = () => {
           avaliado: candidato.avaliado === "T" ? "Avaliado" : "Não avaliado",
           nome: candidato.candidato.nome,
           email: candidato.candidato.email,
-          telefone: candidato.candidato.telefone,
-          dataNascimento: candidato.candidato.dataNascimento,
+          telefone: candidato.candidato.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
+          dataNascimento: candidato.candidato.dataNascimento?.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3/$2/$1"),
           turno: candidato.candidato.formulario.turno,
           estado: candidato.candidato.estado,
         };
@@ -59,8 +59,8 @@ export const Subscription = () => {
           avaliado: candidato.avaliado === "T" ? "Avaliado" : "Não Avaliado",
           nome: candidato.candidato.nome,
           email: candidato.candidato.email,
-          telefone: candidato.candidato.telefone,
-          dataNascimento: candidato.candidato.dataNascimento,
+          telefone: candidato.candidato.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
+          dataNascimento: candidato.candidato.dataNascimento?.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3/$2/$1"),
           turno: candidato.candidato.formulario.turno,
           estado: candidato.candidato.estado,
         };
