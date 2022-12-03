@@ -101,6 +101,7 @@ export const CandidatesProvider = ({ children }: IChildren) => {
             });
         });
     } catch (error) {
+      toast.error("Erro ao enviar formulário");
       console.log(error);
     } finally {
       nProgress.done();

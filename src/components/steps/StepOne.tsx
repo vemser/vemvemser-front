@@ -37,8 +37,6 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
 
   const handleFormSubmit = (data: ICandidateForm) => {
     data.telefone = data.telefone.replace(/[^0-9]/g, "");
-    console.log(data.dataNascimento)
-
     setFormValues(data);
     nextFormStep && nextFormStep();
   };
@@ -57,6 +55,7 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
       sx={{
         display: formStep === 0 ? "" : "none",
       }}
+      data-testid="stepOne"
     >
       <Grid
         component="form"
@@ -194,19 +193,19 @@ export const StepOne: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
 
         <Grid item xs={12} md={6}>
           <FormLabel component="legend" sx={{ mb: 1 }}>
-           Qual a sua data de nascimento?
+            Qual a sua data de nascimento?
           </FormLabel>
-              <TextField
-                type="date"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                id="s1-candidato-data-nascimento"
-                error={!!errors.dataNascimento}
-                {...register("dataNascimento")}
-              />
-              <Typography variant="caption" color="error">
-                {errors.dataNascimento?.message}
-              </Typography>
+          <TextField
+            type="date"
+            variant="outlined"
+            sx={{ width: "100%" }}
+            id="s1-candidato-data-nascimento"
+            error={!!errors.dataNascimento}
+            {...register("dataNascimento")}
+          />
+          <Typography variant="caption" color="error">
+            {errors.dataNascimento?.message}
+          </Typography>
         </Grid>
 
         <Grid item xs={12} md={6}>

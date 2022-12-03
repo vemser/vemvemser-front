@@ -83,6 +83,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
       sx={{
         display: formStep === 1 ? "" : "none",
       }}
+      data-testid="stepTwo"
     >
       <Grid
         component="form"

@@ -9,7 +9,6 @@ import {
   Button,
   Toolbar,
   Typography,
-  Fab,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -98,7 +97,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex" }} data-testid="drawer-container">
       <CssBaseline />
       <AppBar
         position="fixed"
