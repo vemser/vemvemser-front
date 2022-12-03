@@ -20,7 +20,7 @@ import { Perfil } from "./pages/Perfil";
 
 export const Router = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <ThemeProvider theme={theme}>
         <AuthProvider>
           <ManagerProvider>
