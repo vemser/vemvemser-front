@@ -263,13 +263,13 @@ export const Curriculum: React.FC = () => {
                 <PessoalInformation title="Email:" value={candidato?.email} />
                 <PessoalInformation
                   title="Telefone:"
-                  value={candidato?.telefone}
+                  value={candidato?.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")}
                 />
                 <PessoalInformation title="CPF:" value={candidato?.cpf} />
                 <PessoalInformation title="RG:" value={candidato?.rg} />
                 <PessoalInformation
                   title="Data de Nascimento:"
-                  value={candidato?.dataNascimento || "Não informado"}
+                  value={candidato?.dataNascimento?.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3/$2/$1") || "Não informado"}
                 />
                 <PessoalInformation title="Estado:" value={candidato?.estado} />
                 <PessoalInformation title="Cidade:" value={candidato?.cidade} />

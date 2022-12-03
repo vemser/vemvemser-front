@@ -81,7 +81,7 @@ export const Avaliation = () => {
           emailCandidato: avaliacao.inscricao.candidato.email,
           nomeAvaliador: avaliacao.avaliador.nome,
           emailAvliador: avaliacao.avaliador.email,
-          telefoneCandidato: avaliacao.inscricao.candidato.telefone,
+          telefoneCandidato: avaliacao.inscricao.candidato.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
           idAvaliacao: avaliacao.idAvaliacao,
         };
       });
@@ -94,7 +94,7 @@ export const Avaliation = () => {
           emailCandidato: avaliacao.inscricao.candidato.email,
           nomeAvaliador: avaliacao.avaliador.nome,
           emailAvliador: avaliacao.avaliador.email,
-          telefoneCandidato: avaliacao.inscricao.candidato.telefone,
+          telefoneCandidato: avaliacao.inscricao.candidato.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
           idAvaliacao: avaliacao.idAvaliacao,
         };
       });
