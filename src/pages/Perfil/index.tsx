@@ -56,7 +56,7 @@ export const Perfil = () => {
             spacing={2}
             alignItems="center"
             alignContent="center"
-            id="novo-usuario"
+            id="perfil-editar-form"
             onSubmit={handleSubmit(handleEditUser)}
           >
             <Grid item xs={12} md={6}>
@@ -66,7 +66,7 @@ export const Perfil = () => {
                 sx={{
                   width: "100%",
                 }}
-                id="novo-usuario-nome"
+                id="perfil-nome"
                 error={!!errors.nome}
                 {...register("nome")}
               />
@@ -81,7 +81,7 @@ export const Perfil = () => {
                 sx={{
                   width: "100%",
                 }}
-                id="novo-usuario-email"
+                id="perfil-email"
                 error={!!errors.email}
                 {...register("email")}
               />
@@ -102,7 +102,7 @@ export const Perfil = () => {
                   sx={{
                     width: "100%",
                   }}
-                  id="novo-usuario-senha"
+                  id="perfil-senha"
                 />
               </Tooltip>
               <Typography variant="caption" color="error">
@@ -117,7 +117,7 @@ export const Perfil = () => {
                 sx={{
                   width: "100%",
                 }}
-                id="novo-usuario-confirmar-senha"
+                id="perfil-confirmar-senha"
               />
               <Typography variant="caption" color="error">
                 {/* {errors.confirmarSenha?.message} */}
@@ -129,7 +129,7 @@ export const Perfil = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  id="novo-usuario-cadastrar"
+                  id="perfil-editar-btn"
                 >
                   Editar
                 </Button>

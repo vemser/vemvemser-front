@@ -147,6 +147,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
             <Button
               variant="contained"
               color="primary"
+              id="btn-perfil-page"
               onClick={() => navigate("/perfil")}
               sx={{
                 display: pathname === "/perfil" ? "none" : "flex",
