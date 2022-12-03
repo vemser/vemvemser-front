@@ -16,6 +16,7 @@ import { AvaliationProvider } from "./context/AvaliationContext";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { Recover } from "./pages/Recover";
 import { Avaliation } from "./pages/Avaliation";
+import { Perfil } from "./pages/Perfil";
 
 export const Router = () => {
   return (
@@ -44,6 +45,7 @@ export const Router = () => {
                       element={<Curriculum />}
                     />
                     <Route path="/avaliations" element={<Avaliation />} />
+                    <Route path="/perfil" element={<Perfil />} />
                   </Route>
                 </Routes>
               </AvaliationProvider>

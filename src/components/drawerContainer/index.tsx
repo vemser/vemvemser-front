@@ -9,12 +9,17 @@ import {
   Button,
   Toolbar,
   Typography,
+  Fab,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IDrawerContainerProps } from "../../utils/interfaces";
 import { menuItems } from "../../utils/menuItems";
-import { CaretLeft, List as ListIcon } from "phosphor-react";
+import {
+  CaretLeft,
+  IdentificationCard,
+  List as ListIcon,
+} from "phosphor-react";
 import { useManager } from "../../context/ManagerContext";
 import logoDbc from "../../assets/logo-blue.svg";
 
@@ -61,7 +66,9 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
             <ListItem key={text.text} disablePadding>
               <Button
                 component={Link}
-                variant={pathname === text.path ? "contained" : "outlined"}
+                variant={
+                  pathname.includes(text.path) ? "contained" : "outlined"
+                }
                 to={text.path}
                 sx={{
                   width: "100%",
@@ -137,25 +144,26 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box>
-            <Typography
-              variant="body1"
-              noWrap
-              component="p"
-              id="header-gestor-nome"
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/perfil")}
               sx={{
-                textAlign: "right",
+                display: pathname === "/perfil" ? "none" : "flex",
               }}
             >
-              {gestorLogado?.nome}
-            </Typography>
-            <Typography
-              variant="body2"
-              component="p"
-              id="header-gestor-cargo"
-              sx={{ textTransform: "lowercase" }}
-            >
-              {gestorLogado?.cargoDto?.nome.split("_")[1]}
-            </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: 1,
+                }}
+              >
+                <IdentificationCard size={20} color="#eff1f6" weight="bold" />
+              </Box>
+              {gestorLogado?.nome?.split(" ")[0]}
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

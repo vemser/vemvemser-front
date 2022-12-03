@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
 
 export const Dashboard: React.FC = () => {
-  const { register, handleSubmit, watch, reset } =
+  const { register, handleSubmit, watch } =
     useForm<ISearchColaborators>();
   const navigate = useNavigate();
   const { nome, email } = watch();

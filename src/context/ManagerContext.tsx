@@ -91,6 +91,7 @@ export const ManagerProvider = ({ children }: IChildren) => {
           navigate("/dashboard");
         });
     } catch (error) {
+      console.log(error)
       toast.error("Erro ao editar usuário");
     } finally {
       nProgress.done();
