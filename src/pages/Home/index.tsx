@@ -18,15 +18,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ILogin } from "../../utils/interfaces";
 import { loginSchema } from "../../utils/schemas";
 import { useEffect, useState } from "react";
-import logoDbc from "../../assets/logo-white.svg";
 import { useAuth } from "../../context/AuthContext";
+import logoDbc from "../../assets/logo-white.svg";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { auth } = useAuth();
+  const { auth, forgotPassword } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [emailRecover, setEmailRecover] = useState("");
+
+  // pegar o localhost:3000 sem o https://
+  const url = window.location.href
+    .toString()
+    .replace("http://", "")
+    .replace("/", "");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -174,9 +180,9 @@ export const Home: React.FC = () => {
                     <Button
                       disabled={!emailRecover.includes("@dbccompany.com.br")}
                       onClick={() => {
-                        // handleClose();
                         if (emailRecover.includes("@dbccompany.com.br")) {
-                          console.log(emailRecover);
+                          forgotPassword(emailRecover, url);
+                          handleClose();
                         }
                       }}
                     >

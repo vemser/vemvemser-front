@@ -33,8 +33,51 @@ export const AuthProvider = ({ children }: IChildren) => {
     }
   };
 
+  const forgotPassword = async (email: string, url: string) => {
+    try {
+      nProgress.start();
+      await axios.post(`${baseurl}/auth/forgot-password`, {
+        email,
+        url,
+      });
+      toast.success("Email enviado com sucesso!");
+    } catch (error: any) {
+      toast.error(error?.response.data.message);
+    } finally {
+      nProgress.done();
+    }
+  };
+
+  const changePasswordByIdGestor = async (idGestor: number, senha: string) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .put(
+          `${baseurl}/gestor/trocar-senha/${idGestor}`,
+          { senha },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then(() => {
+          localStorage.removeItem("token");
+          toast.success("Senha alterada com sucesso!");
+          navigate("/");
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      nProgress.done();
+    }
+  };
+
   return (
-    <ManagerContext.Provider value={{ auth, loginDados }}>
+    <ManagerContext.Provider
+      value={{ auth, forgotPassword, changePasswordByIdGestor, loginDados }}
+    >
       {children}
     </ManagerContext.Provider>
   );

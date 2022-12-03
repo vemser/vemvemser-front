@@ -7,6 +7,8 @@ export interface ILogin {
 
 export interface IAuthContext {
   auth: (values: ILogin) => Promise<void>;
+  forgotPassword: (email: string, url: string) => Promise<void>;
+  changePasswordByIdGestor: (idGestor: number, senha: string) => Promise<void>;
   loginDados: ILoginDados;
 }
 

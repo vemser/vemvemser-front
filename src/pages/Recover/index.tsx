@@ -11,6 +11,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { recoverSchema } from "../../utils/schemas";
 import { IRecover } from "../../utils/interfaces";
+import { useManager } from "../../context/ManagerContext";
+import { useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const Recover = () => {
   const {
@@ -21,9 +25,22 @@ export const Recover = () => {
     resolver: yupResolver(recoverSchema),
   });
 
+  const navigate = useNavigate();
+  const { loggedManager, gestorLogado } = useManager();
+
+  const { changePasswordByIdGestor } = useAuth();
+
   const handleRecover = (data: IRecover) => {
-    console.log(data);
+    changePasswordByIdGestor(gestorLogado.idGestor, data.senha);
   };
+
+  useEffect(() => {
+    loggedManager();
+  }, []);
+
+  useEffect(() => {
+    console.log(gestorLogado);
+  }, [gestorLogado]);
 
   return (
     <Container
