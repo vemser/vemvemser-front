@@ -121,6 +121,7 @@ export const userEditSchema = yup.object().shape({
       /^[\w-.]+@dbccompany.com.br$/,
       "Só é válido o email com @dbccompany.com.br"
     ),
+
 });
 
 export const recoverSchema = yup.object().shape({

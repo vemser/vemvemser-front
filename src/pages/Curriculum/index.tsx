@@ -7,12 +7,17 @@ import {
   Divider,
   Menu,
   MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { getFilePlugin, RenderDownloadProps } from "@react-pdf-viewer/get-file";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import { ITrilhas } from "../../utils/interfaces";
@@ -37,6 +42,16 @@ export const Curriculum: React.FC = () => {
   const getFilePluginInstance = getFilePlugin();
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const { Download } = getFilePluginInstance;
+  const [openDelete, setOpenDelete] = useState(false);
+  const navigate = useNavigate();
+
+  const handleClickDeleteOpen = () => {
+    setOpenDelete(true);
+  };
+
+  const handleClickDeleteClose = () => {
+    setOpenDelete(false);
+  };
 
   const {
     getFormularioById,
@@ -44,7 +59,7 @@ export const Curriculum: React.FC = () => {
     candidatePdf,
     candidateSelected,
   } = useCandidates();
-  const { registerAvaliation } = useAvaliation();
+  const { registerAvaliation, deleteAvaliation } = useAvaliation();
 
   const [formattedCandidatePdf, setFormattedCandidatePdf] =
     useState<string>("null");
@@ -154,9 +169,51 @@ export const Curriculum: React.FC = () => {
             </>
           )}
           {state.idAvaliacao && (
-            <Button variant="contained" color="secondary" sx={{ ml: 2 }}>
-              Deletar
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                onClick={handleClickDeleteOpen}
+                color="secondary"
+                sx={{ ml: 2 }}
+              >
+                Deletar
+              </Button>
+              <Dialog
+                open={openDelete}
+                onClose={handleClickDeleteClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                maxWidth="xs"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  Deseja deletar esse candidato?
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Todos os dados referente a esse candidato serão deletados
+                    permanentemente.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClickDeleteClose} variant="contained">
+                    Fechar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleClickDeleteClose();
+
+                      deleteAvaliation(state.idAvaliacao);
+                      navigate("/avaliations");
+                    }}
+                    autoFocus
+                    variant="contained"
+                    color="secondary"
+                  >
+                    Deletar
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </>
           )}
         </Grid>
         {candidatePdf !== "" && (

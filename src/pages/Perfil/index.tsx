@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   Grid,
@@ -10,12 +10,55 @@ import {
 import { useManager } from "../../context/ManagerContext";
 import { IGestorDados } from "../../utils/interfaces";
 import { useForm } from "react-hook-form";
-import { userEditSchema } from "../../utils/schemas";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { recoverSchema, userEditSchema } from "../../utils/schemas";
+
+export const userEditSchemaWithoutPassword = yup.object().shape({
+  nome: yup.string().required("O nome é obrigatório"),
+  email: yup
+    .string()
+    .matches(
+      /^[\w-.]+@dbccompany.com.br$/,
+      "Só é válido o email com @dbccompany.com.br"
+    ),
+});
+
+export const userEditSchemaWithPassword = yup.object().shape({
+  nome: yup.string().required("O nome é obrigatório"),
+  email: yup
+    .string()
+    .matches(
+      /^[\w-.]+@dbccompany.com.br$/,
+      "Só é válido o email com @dbccompany.com.br"
+    ),
+  password: yup
+    .string()
+    .required("A senha é obrigatória")
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .matches(/^(?=.*[A-Z])/, "A senha deve ter no mínimo 1 letra maiúscula")
+    .matches(/^(?=.*[a-z])/, "A senha deve ter no mínimo 1 letra minúscula")
+    .matches(/^(?=.*[0-9])/, "A senha deve ter no mínimo 1 número")
+    .matches(
+      /^(?=.*[!@#$%^&*])/,
+      "A senha deve ter no mínimo 1 caracter especial"
+    ),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "As senhas devem ser iguais"),
+});
+
+export interface IPerfil {
+  nome: string;
+  email: string;
+  senha: string;
+  confirmarSenha?: string;
+}
 
 export const Perfil = () => {
   const { loggedManager, editManager, gestorLogado } = useManager();
+  const [senha, setSenha] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,19 +73,21 @@ export const Perfil = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IGestorDados>({
-    resolver: yupResolver(userEditSchema),
+  } = useForm<IPerfil>({
+    resolver: yupResolver(senha.length >= 1 ? recoverSchema : userEditSchema),
     defaultValues: {
       nome: gestorLogado?.nome,
       email: gestorLogado?.email,
     },
   });
 
-  const handleEditUser = (data: IGestorDados) => {
+  const handleEditUser = (data: IPerfil) => {
+    console.log(data);
     editManager(gestorLogado.idGestor, {
       nome: data?.nome,
       email: data?.email,
       tipoCargo: gestorLogado?.cargoDto?.idCargo,
+      senha: data?.senha,
     });
   };
 
@@ -99,6 +144,9 @@ export const Perfil = () => {
                   label="Senha"
                   variant="outlined"
                   type="password"
+                  error={!!errors.senha}
+                  {...register("senha")}
+                  onChange={(e) => setSenha(e.target.value)}
                   sx={{
                     width: "100%",
                   }}
@@ -106,7 +154,7 @@ export const Perfil = () => {
                 />
               </Tooltip>
               <Typography variant="caption" color="error">
-                {/* {errors.senha?.message} */}
+                {errors.senha?.message}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -114,13 +162,14 @@ export const Perfil = () => {
                 label="Confirme a senha"
                 variant="outlined"
                 type="password"
+                {...register("confirmarSenha")}
                 sx={{
                   width: "100%",
                 }}
                 id="perfil-confirmar-senha"
               />
               <Typography variant="caption" color="error">
-                {/* {errors.confirmarSenha?.message} */}
+                {errors.confirmarSenha?.message}
               </Typography>
             </Grid>
 

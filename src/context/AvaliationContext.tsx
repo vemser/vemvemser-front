@@ -107,7 +107,7 @@ export const AvaliationProvider = ({ children }: IChildren) => {
     nProgress.start();
     try {
       axios
-        .delete(`${baseurl}/avaliacao/${idAvaliacao}`, {
+        .delete(`${baseurl}/avaliacao/?idAvaliacao=${idAvaliacao}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

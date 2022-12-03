@@ -52,6 +52,7 @@ export const EditUser: React.FC = () => {
       nome: data?.nome,
       email: data?.email,
       tipoCargo: data?.tipoCargo,
+      senha: "",
     });
   };
 
@@ -73,7 +74,7 @@ export const EditUser: React.FC = () => {
           id="editar-usuario"
           onSubmit={handleSubmit(handleEditUser)}
         >
-          <Grid item xs={12} md={6} component="form">
+          <Grid item xs={12} md={6}>
             <TextField
               label="Nome completo"
               variant="outlined"
@@ -88,7 +89,7 @@ export const EditUser: React.FC = () => {
               {errors.nome?.message}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6} component="form">
+          <Grid item xs={12} md={6}>
             <TextField
               label="Email"
               variant="outlined"
@@ -189,7 +190,7 @@ export const EditUser: React.FC = () => {
                   </Button>
                   <Button
                     variant="contained"
-                    color="error"
+                    color="secondary"
                     onClick={() => {
                       handleClose();
                       deleteManager(state.id);
