@@ -85,7 +85,7 @@ export const EditUser: React.FC = () => {
               error={!!errors.nome}
               {...register("nome")}
             />
-            <Typography variant="caption" color="error">
+            <Typography id="edit-nome-erro" variant="caption" color="error">
               {errors.nome?.message}
             </Typography>
           </Grid>
@@ -100,7 +100,7 @@ export const EditUser: React.FC = () => {
               error={!!errors.email}
               {...register("email")}
             />
-            <Typography variant="caption" color="error">
+            <Typography id="edit-nome-email" variant="caption" color="error">
               {errors.email?.message}
             </Typography>
           </Grid>

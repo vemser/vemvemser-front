@@ -115,7 +115,7 @@ export const Perfil = () => {
                 error={!!errors.nome}
                 {...register("nome")}
               />
-              <Typography variant="caption" color="error">
+              <Typography id="perfil-nome-erro" variant="caption" color="error">
                 {errors.nome?.message}
               </Typography>
             </Grid>
@@ -130,7 +130,7 @@ export const Perfil = () => {
                 error={!!errors.email}
                 {...register("email")}
               />
-              <Typography variant="caption" color="error">
+              <Typography id="perfil-email-erro" variant="caption" color="error">
                 {errors.email?.message}
               </Typography>
             </Grid>
