@@ -75,8 +75,8 @@ export const FormCard = ({
   );
 };
 
-export const FormCompleted = () => {
-  const { data, createCandidate, updateCurriculo } = useCandidates();
+export const FormCompleted: React.FC = () => {
+  const { data, createCandidate } = useCandidates();
 
   const formulario = {
     matriculadoBoolean: data.matriculadoBoolean,
@@ -136,6 +136,7 @@ export const FormCompleted = () => {
         mt: 2,
         borderRadius: 4,
       }}
+      data-testid="formCompleted"
     >
       <AlertTitle>
         Você completou a sua inscrição no <strong>VemSer DBC</strong>!
