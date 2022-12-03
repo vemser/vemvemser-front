@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   AlertTitle,
 } from "@mui/material";
 import { useCandidates } from "../../context/CandidatesContext";
-import { IFormCardProps } from "../../utils/interfaces";
+import { IFormCardProps, IInscriptionForm } from "../../utils/interfaces";
 
 const steps: string[] = [
   "Informações Cadastrais",
@@ -32,10 +32,16 @@ export const FormCard = ({
               {steps[currentStep]}
             </Typography>
           </Box>
-          <Stepper activeStep={currentStep} sx={{ my: 2, alignItems: {
-            xs: "flex-start",
-            lg: "center",
-          } }}>
+          <Stepper
+            activeStep={currentStep}
+            sx={{
+              my: 2,
+              alignItems: {
+                xs: "flex-start",
+                lg: "center",
+              },
+            }}
+          >
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel
@@ -57,7 +63,7 @@ export const FormCard = ({
             ))}
           </Stepper>
 
-          {currentStep > 0 && currentStep < 2 && (
+          {currentStep > 0 && currentStep < 3 && (
             <Button onClick={prevFormStep} variant="outlined" sx={{ mb: 2 }}>
               Voltar
             </Button>
@@ -70,8 +76,58 @@ export const FormCard = ({
 };
 
 export const FormCompleted = () => {
-  const { data } = useCandidates();
-  console.log(data)
+  const { data, createCandidate, updateCurriculo } = useCandidates();
+
+  const formulario = {
+    matriculadoBoolean: data.matriculadoBoolean,
+    curso: data.curso,
+    instituicao: data.instituicao,
+    turno: data.turno,
+    github: data.github,
+    desafiosBoolean: data.desafiosBoolean,
+    problemasBoolean: data.problemasBoolean,
+    reconhecimentoBoolean: data.reconhecimentoBoolean,
+    altruismoBoolean: data.altruismoBoolean,
+    resposta: data.resposta,
+    lgpdBoolean: data.lgpdBoolean,
+    provaBoolean: data.provaBoolean,
+    ingles: data.ingles,
+    espanhol: data.espanhol,
+    neurodiversidade: data.neurodiversidade,
+    efetivacaoBoolean: data.efetivacaoBoolean,
+    disponibilidadeBoolean: data.disponibilidadeBoolean,
+    configuracoes: data.configuracoes,
+    linkedin: data.linkedin,
+    trilhas: data.trilhas,
+    genero: data.genero,
+    orientacao: data.orientacao,
+  };
+
+  const candidato = {
+    nome: data.nome,
+    email: data.email,
+    dataNascimento: data.dataNascimento,
+    telefone: data.telefone,
+    rg: data.rg,
+    estado: data.estado,
+    cidade: data.cidade,
+    cpf: data.cpf,
+    pcd: data.pcd,
+  };
+
+  const pdf = data.curriculo;
+
+  useEffect(() => {
+    const formData = new FormData();
+    formData.append("file", pdf);
+
+    if (pdf) {
+      createCandidate(formulario, candidato, formData);
+    } else {
+      createCandidate(formulario, candidato);
+    }
+    console.log(formData);
+  }, []);
 
   return (
     <Alert

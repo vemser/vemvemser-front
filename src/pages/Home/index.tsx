@@ -6,35 +6,61 @@ import {
   Stack,
   TextField,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ILogin } from "../../utils/interfaces";
 import { loginSchema } from "../../utils/schemas";
-import { useEffect } from "react";
-import { useManager } from "../../context/ManagerContext";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import logoDbc from "../../assets/logo-white.svg";
 
 export const Home: React.FC = () => {
+  const navigate = useNavigate();
+  const { auth, forgotPassword } = useAuth();
+
+  const [open, setOpen] = useState(false);
+  const [emailRecover, setEmailRecover] = useState("");
+
+  // pegar o localhost:3000 sem o https://
+  const url = window.location.href
+    .toString()
+    .replace("http://", "")
+    .replace("/", "");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    token && navigate("/dashboard");
+    if (token) {
+      navigate("/dashboard");
+    } else {
+      navigate("/");
+    }
   }, []);
-  const navigate = useNavigate();
-
-  const { handleUserlogin } = useManager();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ILogin>({
-    // resolver: yupResolver(loginSchema),
+    resolver: yupResolver(loginSchema),
   });
 
   const handleLogin = (data: ILogin) => {
-    handleUserlogin(data);
+    auth(data);
   };
 
   return (
@@ -119,6 +145,51 @@ export const Home: React.FC = () => {
                 >
                   Entrar
                 </Button>
+                <Button
+                  color="primary"
+                  id="home-recuperar-conta"
+                  onClick={handleClickOpen}
+                >
+                  Recuperar conta
+                </Button>
+
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>Recuperar conta</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Após digitar o email, aguarde pelo email que será enviado
+                      ao mesmo cadastrado.
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="recuperar-email"
+                      label="Email"
+                      type="email"
+                      fullWidth
+                      variant="filled"
+                      onChange={(e) => setEmailRecover(e.target.value)}
+                    />
+                  </DialogContent>
+                  <Typography sx={{ ml: 3 }} variant="caption" color="error">
+                    {!emailRecover.includes("@dbccompany.com.br") &&
+                      "O email deve ser do domínio @dbccompany.com.br"}
+                  </Typography>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button
+                      disabled={!emailRecover.includes("@dbccompany.com.br")}
+                      onClick={() => {
+                        if (emailRecover.includes("@dbccompany.com.br")) {
+                          forgotPassword(emailRecover, url);
+                          handleClose();
+                        }
+                      }}
+                    >
+                      Enviar email
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Stack>
             </Box>
           </Grid>

@@ -13,9 +13,12 @@ import { IUser } from "../../utils/interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "../../utils/schemas";
 import { useManager } from "../../context/ManagerContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const NewUser: React.FC = () => {
-  const { createNewManager } = useManager();
+  const { gestorLogado, createNewManager } = useManager();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -37,6 +40,14 @@ export const NewUser: React.FC = () => {
     };
     createNewManager(data);
   };
+
+  useEffect(() => {
+    if (gestorLogado?.cargoDto?.idCargo !== 1) {
+      navigate("/dashboard");
+    }
+
+    console.log("teste");
+  }, [gestorLogado]);
 
   return (
     <Stack maxWidth="lg" m="0 auto">

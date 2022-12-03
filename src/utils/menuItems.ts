@@ -9,7 +9,11 @@ export const menuItems: MenuItem[] = [
     path: "/dashboard",
   },
   {
-    text: "Candidatos",
-    path: "/asda",
+    text: "Inscrições",
+    path: "/subscriptions",
   },
+  {
+    text: "Avaliações",
+    path: "/avaliations",
+  }
 ];

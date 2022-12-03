@@ -9,12 +9,18 @@ import {
   Button,
   Toolbar,
   Typography,
+  Fab,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IDrawerContainerProps } from "../../utils/interfaces";
 import { menuItems } from "../../utils/menuItems";
-import { CaretLeft, List as ListIcon } from "phosphor-react";
+import {
+  CaretLeft,
+  IdentificationCard,
+  List as ListIcon,
+} from "phosphor-react";
+import { useManager } from "../../context/ManagerContext";
 import logoDbc from "../../assets/logo-blue.svg";
 
 const drawerWidth = 240;
@@ -23,10 +29,15 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { gestorLogado, loggedManager } = useManager();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    loggedManager();
+  }, []);
 
   const drawer = (
     <div>
@@ -55,7 +66,9 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
             <ListItem key={text.text} disablePadding>
               <Button
                 component={Link}
-                variant={pathname === text.path ? "contained" : "outlined"}
+                variant={
+                  pathname.includes(text.path) ? "contained" : "outlined"
+                }
                 to={text.path}
                 sx={{
                   width: "100%",
@@ -104,9 +117,7 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
           >
             <ListIcon size={28} color="#ffffff" weight="bold" />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {menuItems.find((item) => item.path === pathname)?.text}
-          </Typography>
+
           {pathname !== "/dashboard" && (
             <Button
               onClick={() => navigate(-1)}
@@ -122,11 +133,39 @@ export const DrawerContainer = (props: IDrawerContainerProps) => {
                 "&:hover": {
                   transform: "scale(1.1)",
                 },
+                mr: 2,
               }}
             >
               Voltar
             </Button>
           )}
+          <Typography variant="h6" noWrap component="p">
+            {menuItems.find((item) => item.path === pathname)?.text}
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              id="btn-perfil-page"
+              onClick={() => navigate("/perfil")}
+              sx={{
+                display: pathname === "/perfil" ? "none" : "flex",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: 1,
+                }}
+              >
+                <IdentificationCard size={20} color="#eff1f6" weight="bold" />
+              </Box>
+              {gestorLogado?.nome?.split(" ")[0]}
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box

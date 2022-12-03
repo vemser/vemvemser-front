@@ -26,48 +26,67 @@ export const stepOneSchema = yup.object().shape({
   rg: yup
     .string()
     .required("RG obrigatório")
-    .min(8, "O RG precisa ter no mínimo 8 caracteres"),
+    .min(7, "O RG precisa ter no mínimo 7 caracteres")
+    .max(12, "O RG precisa ter no máximo 12 caracteres"),
   estado: yup.string().required("Estado obrigatório"),
   cidade: yup
     .string()
     .min(3, "É necessário no mínimo 3 letras")
     .required("Cidade obrigatório"),
+  dataNascimento: yup.string().required("Data de nascimento obrigatória"),
 });
 
 export const stepTwoSchema = yup.object().shape({
   resposta: yup
     .string()
-    .when(["altruismo", "reconhecimento", "desafios", "problemas"], {
-      is: (
-        altruismo: boolean,
-        reconhecimento: boolean,
-        desafios: boolean,
-        problemas: boolean
-      ) => {
-        return (
-          altruismo === false &&
-          reconhecimento === false &&
-          desafios === false &&
-          problemas === false
-        );
-      },
-      then: yup
-        .string()
-        .required(
-          "Preencha o campo 'Outro motivo' ou selecione uma das opções acima"
-        ),
-      otherwise: yup.string(),
-    }),
-  instituicao: yup.string().when("matriculado", {
-    is: "sim",
-    then: yup.string().required("Preencha o campo com o nome da instituição"),
+    .when(
+      [
+        "altruismoBoolean",
+        "reconhecimentoBoolean",
+        "desafiosBoolean",
+        "problemasBoolean",
+      ],
+      {
+        is: (
+          altruismo: boolean,
+          reconhecimento: boolean,
+          desafios: boolean,
+          problemas: boolean
+        ) => {
+          return (
+            altruismo === false &&
+            reconhecimento === false &&
+            desafios === false &&
+            problemas === false
+          );
+        },
+        then: yup
+          .string()
+          .required(
+            "Preencha o campo 'Outro motivo' ou selecione uma das opções acima"
+          ),
+        otherwise: yup.string(),
+      }
+    ),
+  instituicao: yup.string().when("matriculadoBoolean", {
+    is: "T",
+    then: yup
+      .string()
+      .min(2, "É necessário 2 caracteres, no mínimo")
+      .required("Preencha o campo com o nome da instituição"),
   }),
-  curso: yup.string().when("matriculado", {
-    is: "sim",
-    then: yup.string().required("Preencha o campo com o nome do curso"),
+  curso: yup.string().when("matriculadoBoolean", {
+    is: "T",
+    then: yup
+      .string()
+      .min(2, "É necessário 2 caracteres, no mínimo")
+      .required("Preencha o campo com o nome do curso"),
   }),
   github: yup.string(),
-  lgpd: yup.boolean().oneOf([true], "É necessário aceitar os termos"),
+  lgpdBoolean: yup.boolean().oneOf([true], "É necessário aceitar os termos"),
+  configuracoes: yup.string().required("É necessário informar a configuração"),
+  // trilhas tem que selecionar pelo menos um do checkbox
+  trilhas: yup.array().min(1, "É necessário selecionar pelo menos uma trilha"),
 });
 
 export const userSchema = yup.object().shape({
@@ -92,4 +111,32 @@ export const userSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("senha"), null], "As senhas devem ser iguais")
     .required("A confirmação de senha é obrigatória"),
+});
+
+export const userEditSchema = yup.object().shape({
+  nome: yup.string().required("O nome é obrigatório"),
+  email: yup
+    .string()
+    .matches(
+      /^[\w-.]+@dbccompany.com.br$/,
+      "Só é válido o email com @dbccompany.com.br"
+    ),
+
+});
+
+export const recoverSchema = yup.object().shape({
+  senha: yup
+    .string()
+    .required("Senha obrigatória")
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .matches(/^(?=.*[A-Z])/, "A senha deve ter no mínimo 1 letra maiúscula")
+    .matches(/^(?=.*[a-z])/, "A senha deve ter no mínimo 1 letra minúscula")
+    .matches(/^(?=.*[0-9])/, "A senha deve ter no mínimo 1 número")
+    .matches(
+      /^(?=.*[!@#$%^&*])/,
+      "A senha deve ter no mínimo 1 caracter especial"
+    ),
+  confirmarSenha: yup
+    .string()
+    .oneOf([yup.ref("senha"), null], "As senhas devem ser iguais"),
 });

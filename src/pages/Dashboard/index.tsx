@@ -12,29 +12,62 @@ import {
   Skeleton,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { ISearchColaborators } from "../../utils/interfaces";
+import { IGestorDados, ISearchColaborators } from "../../utils/interfaces";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useManager } from "../../context/ManagerContext";
 
 export const Dashboard: React.FC = () => {
-  const { register, handleSubmit, watch } = useForm<ISearchColaborators>();
+  const { register, handleSubmit, watch } =
+    useForm<ISearchColaborators>();
   const navigate = useNavigate();
   const { nome, email } = watch();
-  const { loading, getManagers, gestorDados } = useManager();
+  const {
+    loading,
+    pageDados,
+    gestorDados,
+    gestorLogado,
+    filteredManagers,
+    getManagers,
+    searchManager,
+  } = useManager();
 
   const handleSearch = (data: ISearchColaborators) => {
-    console.log(data);
+    searchManager(data);
   };
 
   useEffect(() => {
-    getManagers();
+    getManagers(0);
   }, []);
+
+  const rows = () => {
+    if (filteredManagers.length > 0) {
+      return filteredManagers.map((gestor: IGestorDados) => {
+        return {
+          id: gestor.idGestor,
+          nome: gestor.nome,
+          email: gestor.email,
+          cargo: gestor.cargoDto.nome.split("_")[1],
+          tipoCargo: gestor.cargoDto.idCargo,
+        };
+      });
+    } else {
+      return gestorDados.map((gestor) => {
+        return {
+          id: gestor.idGestor,
+          nome: gestor.nome,
+          email: gestor.email,
+          cargo: gestor.cargoDto.nome.split("_")[1],
+          tipoCargo: gestor.cargoDto.idCargo,
+        };
+      });
+    }
+  };
 
   const columns = [
     { field: "nome", headerName: "Nome", width: 200 },
-    // { field: "email", headerName: "Email", minWidth: 220, flex: 1 },
-    // { field: "cargo", headerName: "Cargo", width: 120 },
+    { field: "email", headerName: "Email", minWidth: 200, flex: 1 },
+    { field: "cargo", headerName: "Cargo", width: 160 },
   ];
 
   return (
@@ -92,10 +125,10 @@ export const Dashboard: React.FC = () => {
               variant="outlined"
               sx={{ width: "100%" }}
               id="dashboard-buscar-cargo"
-              {...register("tipoCargo")}
+              {...register("cargo")}
             >
-              <option value="Administrador">Administrador</option>
-              <option value="Colaborador">Colaborador</option>
+              <option value="ADMINISTRADOR">Administrador</option>
+              <option value="COLABORADOR">Colaborador</option>
             </Select>
           </Grid>
         </Grid>
@@ -132,19 +165,17 @@ export const Dashboard: React.FC = () => {
           </Box>
         ) : (
           <DataGrid
-            rows={gestorDados?.map((gestor) => {
-              return {
-                id: gestor.idGestor,
-                nome: gestor.nome,
-              };
-            })}
+            rows={rows()}
             columns={columns}
-            pageSize={10}
+            pageSize={
+              filteredManagers.length > 0 ? filteredManagers.length : 10
+            }
             hideFooterPagination
-            onRowClick={(params) => {
-              navigate(`/dashboard/edit-user`, {
-                state: params.row,
-              });
+            onRowClick={async (params) => {
+              gestorLogado?.cargoDto?.idCargo === 1 &&
+                navigate(`/dashboard/edit-user`, {
+                  state: params.row,
+                });
             }}
           />
         )}
@@ -162,19 +193,38 @@ export const Dashboard: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Button
-            variant="contained"
-            onClick={() => navigate("/dashboard/new-user")}
-            sx={{
-              width: {
-                xs: "100%",
-                md: "fit-content",
-              },
-            }}
-          >
-            Novo usuário
-          </Button>
-          <Pagination count={10} color="primary" size="small" />
+          {gestorLogado?.cargoDto?.idCargo === 1 && (
+            <Button
+              variant="contained"
+              onClick={() => navigate("/dashboard/new-user")}
+              sx={{
+                width: {
+                  xs: "100%",
+                  md: "fit-content",
+                },
+              }}
+            >
+              Novo usuário
+            </Button>
+          )}
+          {!filteredManagers.length && (
+            <Pagination
+              count={pageDados?.totalPages}
+              color="primary"
+              size="small"
+              onChange={(event, page) => getManagers(page - 1)}
+            />
+          )}
+          {filteredManagers.length > 0 && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                searchManager({ nome: "", email: "", cargo: "ADMINISTRADOR" });
+              }}
+            >
+              Limpar busca
+            </Button>
+          )}
         </Box>
       </Box>
     </Stack>
