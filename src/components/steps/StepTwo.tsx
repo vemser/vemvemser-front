@@ -65,9 +65,11 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
     const trilhas = formValues.trilhas.map((trilha: string) => Number(trilha));
     formValues.trilhas = trilhas;
 
+    formValues.curriculo = formValues.curriculo[0];
+
     // if (curriculoIsPdf) {
-      setFormValues(formValues);
-      nextFormStep && nextFormStep();
+    setFormValues(formValues);
+    nextFormStep && nextFormStep();
     // }
   };
 
@@ -701,8 +703,7 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
                     Adicionar
                     <input
                       hidden
-                      accept="application/pdf,application/vnd.ms-excel"
-                      multiple
+                      accept="application/pdf"
                       type="file"
                       id="s2-candidato-curriculo"
                       {...register("curriculo")}

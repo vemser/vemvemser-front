@@ -84,8 +84,15 @@ export const Curriculum: React.FC = () => {
     const url = URL.createObjectURL(blob);
 
     setFormattedCandidatePdf(url);
-    console.log(candidateSelected);
   }, [candidatePdf]);
+
+  useEffect(() => {
+    if (state.idAvaliacao) {
+      console.log("existe");
+    } else {
+      console.log("nao existe");
+    }
+  }, []);
 
   const { candidato } = candidateSelected;
   const formulario = candidato?.formulario;
@@ -145,6 +152,11 @@ export const Curriculum: React.FC = () => {
                 </MenuItem>
               </Menu>
             </>
+          )}
+          {state.idAvaliacao && (
+            <Button variant="contained" color="secondary" sx={{ ml: 2 }}>
+              Deletar
+            </Button>
           )}
         </Grid>
         {candidatePdf !== "" && (

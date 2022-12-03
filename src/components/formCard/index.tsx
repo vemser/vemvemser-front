@@ -119,7 +119,7 @@ export const FormCompleted = () => {
 
   useEffect(() => {
     const formData = new FormData();
-    formData.append("file", pdf[0]);
+    formData.append("file", pdf);
 
     if (pdf) {
       createCandidate(formulario, candidato, formData);

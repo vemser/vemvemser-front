@@ -3,7 +3,11 @@ import { toast } from "react-toastify";
 import { baseurl } from "../utils/baseurl";
 import axios from "axios";
 import nProgress from "nprogress";
-import { IAvaliationCandidate, IAvaliationContext, IChildren } from "../utils/interfaces";
+import {
+  IAvaliationCandidate,
+  IAvaliationContext,
+  IChildren,
+} from "../utils/interfaces";
 import { IAvaliation } from "../utils/interfaces";
 
 export const AvaliationContext = createContext({} as IAvaliationContext);
@@ -12,9 +16,9 @@ export const AvaliationProvider = ({ children }: IChildren) => {
   const [avaliationData, setAvaliationData] = useState<IAvaliation>(
     {} as IAvaliation
   );
-  const [searcheredAvaliation, setSearcheredAvaliation] = useState<IAvaliationCandidate[]>(
-    {} as IAvaliationCandidate[]
-  );
+  const [searcheredAvaliation, setSearcheredAvaliation] = useState<
+    IAvaliationCandidate[]
+  >({} as IAvaliationCandidate[]);
   const registerAvaliation = async (
     aprovadoBoolean: boolean,
     idInscricao: number
@@ -98,12 +102,34 @@ export const AvaliationProvider = ({ children }: IChildren) => {
     }
   };
 
+  const deleteAvaliation = async (idAvaliacao: number) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .delete(`${baseurl}/avaliacao/${idAvaliacao}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          toast.success("Você deletou todos os dados desse candidato!");
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao deletar candidato");
+    } finally {
+      nProgress.done();
+    }
+  };
+
   return (
     <AvaliationContext.Provider
       value={{
         registerAvaliation,
         getAvaliations,
         getAvaliationByEmail,
+        deleteAvaliation,
         searcheredAvaliation,
         avaliationData,
       }}

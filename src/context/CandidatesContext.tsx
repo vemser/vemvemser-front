@@ -80,17 +80,11 @@ export const CandidatesProvider = ({ children }: IChildren) => {
                 .then(() => {
                   toast.success("Seu formulário foi enviado com sucesso!");
 
-                  // put do curriculo
                   if (curriculo) {
                     axios
                       .put(
                         `${baseurl}/formulario/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`,
-                        curriculo,
-                        {
-                          headers: {
-                            "Content-Type": "multipart/form-data",
-                          },
-                        }
+                        curriculo
                       )
                       .then((response) => {
                         console.log("Enviou PDF:" + response);
@@ -102,7 +96,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
                 });
             })
             .catch((err) => {
-              // toast.error(err.response?.data?.errors[0]);
               console.log(err);
               nProgress.done();
             });

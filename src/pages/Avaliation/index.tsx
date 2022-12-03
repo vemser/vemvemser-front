@@ -1,7 +1,15 @@
-import { Box, Button, Grid, Pagination, Stack, TextField, Skeleton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  Pagination,
+  Stack,
+  TextField,
+  Skeleton,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
-import { IAvaliation, ISearchByEmail } from "../../utils/interfaces";
+import { ISearchByEmail } from "../../utils/interfaces";
 import React, { useEffect } from "react";
 import { useAvaliation } from "../../context/AvaliationContext";
 import { useNavigate } from "react-router-dom";
@@ -74,6 +82,7 @@ export const Avaliation = () => {
           nomeAvaliador: avaliacao.avaliador.nome,
           emailAvliador: avaliacao.avaliador.email,
           telefoneCandidato: avaliacao.inscricao.candidato.telefone,
+          idAvaliacao: avaliacao.idAvaliacao,
         };
       });
     } else {
@@ -86,6 +95,7 @@ export const Avaliation = () => {
           nomeAvaliador: avaliacao.avaliador.nome,
           emailAvliador: avaliacao.avaliador.email,
           telefoneCandidato: avaliacao.inscricao.candidato.telefone,
+          idAvaliacao: avaliacao.idAvaliacao,
         };
       });
     }
@@ -151,12 +161,17 @@ export const Avaliation = () => {
                 pageSize={20}
                 onRowClick={(params) => {
                   navigate("/subscriptions/curriculum", {
-                    state: { id: params.row.id },
+                    state: {
+                      id: params.row.id,
+                      idAvaliacao: params.row.idAvaliacao,
+                    },
                   });
                 }}
                 hideFooterPagination
               />
-            ) : <Skeleton variant="rectangular" animation="wave" height={400} />}
+            ) : (
+              <Skeleton variant="rectangular" animation="wave" height={400} />
+            )}
 
             <Box
               sx={{
