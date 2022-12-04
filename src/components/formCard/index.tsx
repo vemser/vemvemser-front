@@ -71,7 +71,7 @@ export const FormCard = ({
               Voltar
             </Button>
           )}
-          {currentStep === 3 && (
+          {currentStep === 2 && (
             <Button
               variant="outlined"
               onClick={() => {
