@@ -29,6 +29,8 @@ export const CandidatesProvider = ({ children }: IChildren) => {
   const [candidatePdf, setCandidatePdf] = useState<string>("");
   const [candidateSelected, setCandidateSelected] =
     useState<ICandidatosElementos>({} as ICandidatosElementos);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [requestStatus, setRequestStatus] = useState<number>(0);
 
   const setFormValues = (values: object) => {
     setData((prevValues: any) => ({
@@ -57,6 +59,8 @@ export const CandidatesProvider = ({ children }: IChildren) => {
   ) => {
     nProgress.start();
     try {
+      setLoading(true);
+      setRequestStatus(0);
       await axios
         .post(
           `http://vemser-dbc.dbccompany.com.br:39000/vemser/vemvemser-back/formulario/cadastro`,
@@ -90,18 +94,32 @@ export const CandidatesProvider = ({ children }: IChildren) => {
                         console.log(err);
                       });
                   }
+
+                  setRequestStatus(200);
+                })
+                .catch((err) => {
+                  toast.error("Erro ao enviar formulário!");
+                  setRequestStatus(400);
                 });
             })
             .catch((err) => {
               console.log(err);
-              nProgress.done();
+              toast.error("Erro ao enviar formulário!");
+              setRequestStatus(400);
             });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Erro ao enviar formulário!");
+          setRequestStatus(400);
         });
     } catch (error) {
       toast.error("Erro ao enviar formulário");
+      setRequestStatus(400);
       console.log(error);
     } finally {
       nProgress.done();
+      setLoading(false);
     }
   };
 
@@ -230,6 +248,8 @@ export const CandidatesProvider = ({ children }: IChildren) => {
         getCandidateByEmail,
         getFormularioById,
         getCandidateById,
+        requestStatus,
+        loading,
         candidateSelected,
         candidatePdf,
         searcheredCandidates,

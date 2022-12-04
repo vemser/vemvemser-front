@@ -8,6 +8,7 @@ import {
   StepLabel,
   Alert,
   AlertTitle,
+  CircularProgress,
 } from "@mui/material";
 import { useCandidates } from "../../context/CandidatesContext";
 import { IFormCardProps } from "../../utils/interfaces";
@@ -25,6 +26,7 @@ export const FormCard = ({
   prevFormStep,
 }: IFormCardProps) => {
   const navigate = useNavigate();
+  const { requestStatus } = useCandidates();
 
   return (
     <div>
@@ -82,6 +84,16 @@ export const FormCard = ({
               Ir para o início
             </Button>
           )}
+
+          {requestStatus !== 200 && requestStatus !== 0 && (
+            <Button
+              onClick={prevFormStep}
+              variant="outlined"
+              sx={{ mb: 2, ml: 1 }}
+            >
+              Voltar
+            </Button>
+          )}
         </>
       )}
       {children}
@@ -90,7 +102,8 @@ export const FormCard = ({
 };
 
 export const FormCompleted: React.FC = () => {
-  const { data, createCandidate } = useCandidates();
+  const { data, createCandidate, loading, requestStatus } =
+    useCandidates();
 
   const formulario = {
     matriculadoBoolean: data.matriculadoBoolean,
@@ -143,18 +156,76 @@ export const FormCompleted: React.FC = () => {
   }, []);
 
   return (
-    <Alert
-      severity="success"
-      sx={{
-        mt: 2,
-        borderRadius: 4,
-      }}
-      data-testid="formCompleted"
-    >
-      <AlertTitle>
-        Você completou a sua inscrição no <strong>VemSer DBC</strong>!
-      </AlertTitle>
-      Em breve você receberá um e-mail com o resultado do seu processo seletivo.
-    </Alert>
+    // <Alert
+    //   severity="success"
+    //   sx={{
+    //     mt: 2,
+    //     borderRadius: 4,
+    //   }}
+    //   data-testid="formCompleted"
+    // >
+    //   <AlertTitle>
+    //     Você completou a sua inscrição no <strong>VemSer DBC</strong>!
+    //   </AlertTitle>
+    //   Em breve você receberá um e-mail com o resultado do seu processo seletivo.
+    // </Alert>
+    <Box>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box>
+          {requestStatus === 200 && (
+            <Alert
+              severity="success"
+              sx={{
+                mt: 2,
+                borderRadius: 4,
+              }}
+              data-testid="formCompleted"
+            >
+              <AlertTitle>
+                Você completou a sua inscrição no <strong>VemSer DBC</strong>!
+              </AlertTitle>
+              Em breve você receberá um e-mail com o resultado do seu processo
+              seletivo.
+            </Alert>
+          )}
+          {requestStatus === 400 && (
+            <Alert
+              severity="error"
+              sx={{
+                mt: 2,
+                borderRadius: 4,
+              }}
+              data-testid="formCompleted"
+            >
+              <AlertTitle>Ops! Algo deu errado.</AlertTitle>
+            </Alert>
+          )}
+
+          {requestStatus === 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
+        </Box>
+      )}
+    </Box>
   );
 };
