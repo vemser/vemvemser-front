@@ -10,7 +10,8 @@ import {
   AlertTitle,
 } from "@mui/material";
 import { useCandidates } from "../../context/CandidatesContext";
-import { IFormCardProps, IInscriptionForm } from "../../utils/interfaces";
+import { IFormCardProps } from "../../utils/interfaces";
+import { useNavigate } from "react-router-dom";
 
 const steps: string[] = [
   "Informações Cadastrais",
@@ -23,6 +24,8 @@ export const FormCard = ({
   currentStep,
   prevFormStep,
 }: IFormCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div>
       {currentStep < 3 && (
@@ -63,9 +66,20 @@ export const FormCard = ({
             ))}
           </Stepper>
 
-          {currentStep > 0 && currentStep < 3 && (
+          {currentStep > 0 && currentStep < 2 && (
             <Button onClick={prevFormStep} variant="outlined" sx={{ mb: 2 }}>
               Voltar
+            </Button>
+          )}
+          {currentStep === 3 && (
+            <Button
+              variant="outlined"
+              onClick={() => {
+                navigate("/");
+              }}
+              sx={{ mb: 2 }}
+            >
+              Ir para o início
             </Button>
           )}
         </>

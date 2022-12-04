@@ -14,6 +14,8 @@ import React, { useEffect } from "react";
 import { useAvaliation } from "../../context/AvaliationContext";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { emailSchema } from "../../utils/schemas";
 
 export const Avaliation = () => {
   const {
@@ -61,7 +63,13 @@ export const Avaliation = () => {
     },
   ];
 
-  const { register, handleSubmit } = useForm<ISearchByEmail>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISearchByEmail>({
+    resolver: yupResolver(emailSchema),
+  });
 
   const handleSearch = (data: ISearchByEmail) => {
     getAvaliationByEmail(data.email);
@@ -124,7 +132,12 @@ export const Avaliation = () => {
           <Stack direction="row" spacing={2}>
             <TextField
               sx={{ width: "100%" }}
-              label="Pesquisar por email"
+              label={
+                errors.email?.message
+                  ? errors.email?.message
+                  : "Pesquisar por email"
+              }
+              error={!!errors.email}
               id="registros-pesquisar"
               {...register("email")}
               InputProps={{
