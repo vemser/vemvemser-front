@@ -114,7 +114,7 @@ export const CurriculumAvaliation: React.FC = () => {
               {avaliationById?.aprovado === "T" ? (
                 <Chip label="Aprovado" color="primary" />
               ) : (
-                <Chip label="Reprovado" color="error" variant="outlined" />
+                <Chip label="Reprovado" color="secondary" variant="outlined" />
               )}
               <Button
                 variant="contained"
