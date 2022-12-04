@@ -75,7 +75,6 @@ export const AvaliationProvider = ({ children }: IChildren) => {
           }
         )
         .then((response) => {
-          console.log(response.data);
           setAvaliationData(response.data);
           nProgress.done();
         });
