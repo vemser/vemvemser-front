@@ -82,7 +82,6 @@ export const Perfil = () => {
   });
 
   const handleEditUser = (data: IPerfil) => {
-    console.log(data);
     editManager(gestorLogado.idGestor, {
       nome: data?.nome,
       email: data?.email,

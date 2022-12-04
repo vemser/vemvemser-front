@@ -126,7 +126,6 @@ export const FormCompleted: React.FC = () => {
     } else {
       createCandidate(formulario, candidato);
     }
-    console.log(formData);
   }, []);
 
   return (

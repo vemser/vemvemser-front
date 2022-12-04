@@ -5,7 +5,6 @@ export const ForgotPassword = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
   const tokenRecuperarSenha = search.split("=")[1];
-  console.log(search)
 
   useEffect(() => {
     if (tokenRecuperarSenha) {

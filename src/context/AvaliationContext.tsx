@@ -19,6 +19,11 @@ export const AvaliationProvider = ({ children }: IChildren) => {
   const [searcheredAvaliation, setSearcheredAvaliation] = useState<
     IAvaliationCandidate[]
   >({} as IAvaliationCandidate[]);
+
+  const [avaliationById, setAvaliationById] = useState<IAvaliationCandidate>(
+    {} as IAvaliationCandidate
+  );
+
   const registerAvaliation = async (
     aprovadoBoolean: boolean,
     idInscricao: number
@@ -70,7 +75,6 @@ export const AvaliationProvider = ({ children }: IChildren) => {
           }
         )
         .then((response) => {
-          console.log(response.data);
           setAvaliationData(response.data);
           nProgress.done();
         });
@@ -123,6 +127,27 @@ export const AvaliationProvider = ({ children }: IChildren) => {
     }
   };
 
+  const getAvaliationById = async (idAvaliacao: number) => {
+    const token = localStorage.getItem("token");
+    nProgress.start();
+    try {
+      axios
+        .get(` ${baseurl}/avaliacao/by-id?id=${idAvaliacao}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setAvaliationById(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao buscar candidato");
+    } finally {
+      nProgress.done();
+    }
+  };
+
   return (
     <AvaliationContext.Provider
       value={{
@@ -130,6 +155,8 @@ export const AvaliationProvider = ({ children }: IChildren) => {
         getAvaliations,
         getAvaliationByEmail,
         deleteAvaliation,
+        getAvaliationById,
+        avaliationById,
         searcheredAvaliation,
         avaliationData,
       }}

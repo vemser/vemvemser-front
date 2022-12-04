@@ -101,14 +101,6 @@ export const Curriculum: React.FC = () => {
     setFormattedCandidatePdf(url);
   }, [candidatePdf]);
 
-  useEffect(() => {
-    if (state.idAvaliacao) {
-      console.log("existe");
-    } else {
-      console.log("nao existe");
-    }
-  }, []);
-
   const { candidato } = candidateSelected;
   const formulario = candidato?.formulario;
 
@@ -166,53 +158,6 @@ export const Curriculum: React.FC = () => {
                   Reprovar
                 </MenuItem>
               </Menu>
-            </>
-          )}
-          {state.idAvaliacao && (
-            <>
-              <Button
-                variant="contained"
-                onClick={handleClickDeleteOpen}
-                color="secondary"
-                sx={{ ml: 2 }}
-              >
-                Deletar
-              </Button>
-              <Dialog
-                open={openDelete}
-                onClose={handleClickDeleteClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                maxWidth="xs"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  Deseja deletar esse candidato?
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    Todos os dados referente a esse candidato serão deletados
-                    permanentemente.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClickDeleteClose} variant="contained">
-                    Fechar
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleClickDeleteClose();
-
-                      deleteAvaliation(state.idAvaliacao);
-                      navigate("/avaliations");
-                    }}
-                    autoFocus
-                    variant="contained"
-                    color="secondary"
-                  >
-                    Deletar
-                  </Button>
-                </DialogActions>
-              </Dialog>
             </>
           )}
         </Grid>
