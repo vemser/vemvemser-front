@@ -1,8 +1,19 @@
 import * as yup from "yup";
 
+const currentYear = new Date().getFullYear();
+// currentYear - 16
+const formattedYear = currentYear - 16;
+
 export const loginSchema = yup.object().shape({
   email: yup.string().email().required(),
   senha: yup.string().required(),
+});
+
+export const emailSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Email inválido")
+    .max(50, "Máximo de 50 caracteres"),
 });
 
 export const stepOneSchema = yup.object().shape({
@@ -10,8 +21,13 @@ export const stepOneSchema = yup.object().shape({
     .string()
     .required("O campo de nome é obrigatório")
     .min(3, "É necessário no mínimo 3 letras")
+    .max(50, "É necessário no máximo 50 letras")
     .matches(/^[a-zA-Z ]*$/, "Nome inválido"),
-  email: yup.string().email("Email inválido").required("Email obrigatório"),
+  email: yup
+    .string()
+    .email("Email inválido")
+    .required("Email obrigatório")
+    .max(250, "Máximo de 250 caracteres"),
   cpf: yup
     .string()
     .required("CPF obrigatório")
@@ -32,8 +48,14 @@ export const stepOneSchema = yup.object().shape({
   cidade: yup
     .string()
     .min(3, "É necessário no mínimo 3 letras")
-    .required("Cidade obrigatório"),
-  dataNascimento: yup.string().required("Data de nascimento obrigatória"),
+    .required("Cidade obrigatório")
+    .max(20, "Máximo de 20 caracteres"),
+  dataNascimento: yup
+    .date()
+    .required("Data de nascimento obrigatória")
+    .max(new Date(formattedYear, 1, 1), "Você precisa ter mais de 16 anos")
+    .min(new Date(1900, 1, 1), "Data inválida")
+    .typeError("Data inválida"),
 });
 
 export const stepTwoSchema = yup.object().shape({
@@ -85,12 +107,14 @@ export const stepTwoSchema = yup.object().shape({
   github: yup.string(),
   lgpdBoolean: yup.boolean().oneOf([true], "É necessário aceitar os termos"),
   configuracoes: yup.string().required("É necessário informar a configuração"),
-  // trilhas tem que selecionar pelo menos um do checkbox
   trilhas: yup.array().min(1, "É necessário selecionar pelo menos uma trilha"),
 });
 
 export const userSchema = yup.object().shape({
-  nome: yup.string().required("O nome é obrigatório"),
+  nome: yup
+    .string()
+    .required("O nome é obrigatório")
+    .max(50, "Máximo 50 caracteres"),
   email: yup
     .string()
     .matches(
@@ -114,14 +138,16 @@ export const userSchema = yup.object().shape({
 });
 
 export const userEditSchema = yup.object().shape({
-  nome: yup.string().required("O nome é obrigatório"),
+  nome: yup
+    .string()
+    .required("O nome é obrigatório")
+    .max(50, "Máximo 50 caracteres"),
   email: yup
     .string()
     .matches(
       /^[\w-.]+@dbccompany.com.br$/,
       "Só é válido o email com @dbccompany.com.br"
     ),
-
 });
 
 export const recoverSchema = yup.object().shape({

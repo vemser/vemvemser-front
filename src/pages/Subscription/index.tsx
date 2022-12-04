@@ -9,11 +9,13 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MagnifyingGlass } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
 import { useForm } from "react-hook-form";
-import { useNavigate, useLocation } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
 import { ISearchByEmail } from "../../utils/interfaces";
+import { emailSchema } from "../../utils/schemas";
 
 const columns = [
   { field: "avaliado", headerName: "Status", minWidth: 160, flex: 1 },
@@ -34,7 +36,13 @@ export const Subscription = () => {
     candidates,
     searcheredCandidates,
   } = useCandidates();
-  const { register, handleSubmit } = useForm<ISearchByEmail>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISearchByEmail>({
+    resolver: yupResolver(emailSchema),
+  });
 
   useEffect(() => {
     getCandidates(0);
@@ -106,7 +114,10 @@ export const Subscription = () => {
           <Stack direction="row" spacing={2}>
             <TextField
               sx={{ width: "100%" }}
-              label="Pesquisar por email"
+              label={
+                errors.email?.message ? errors.email?.message : "Pesquisar por email"
+              }
+              error={!!errors.email}
               id="registros-pesquisar"
               {...register("email")}
               InputProps={{

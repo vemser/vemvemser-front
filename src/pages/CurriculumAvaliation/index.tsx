@@ -103,18 +103,59 @@ export const CurriculumAvaliation: React.FC = () => {
     >
       {Object.keys(avaliationById).length > 0 ? (
         <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <>
+          <Grid item xs={12} md={6}>
+            <Stack
+              direction={{
+                xs: "row",
+              }}
+              spacing={1}
+              sx={{
+                alignItems: "center",
+                width: "100%",
+                justifyContent: {
+                  xs: "center",
+                  lg: "flex-start",
+                },
+              }}
+            >
               {avaliationById?.aprovado === "T" ? (
-                <Chip label="Aprovado" color="primary" />
+                <Chip
+                  sx={{
+                    width: {
+                      xs: "100%",
+                      md: "auto",
+                    },
+                  }}
+                  label="Aprovado"
+                  color="primary"
+                />
               ) : (
-                <Chip label="Reprovado" color="secondary" variant="outlined" />
+                <Chip
+                  sx={{
+                    width: {
+                      xs: "100%",
+                      md: "auto",
+                    },
+                  }}
+                  label="Reprovado"
+                  color="secondary"
+                  variant="outlined"
+                />
               )}
               <Button
                 variant="contained"
                 onClick={handleClickDeleteOpen}
                 color="secondary"
-                sx={{ ml: 2 }}
+                sx={{
+                  px: {
+                    xs: 2,
+                    md: 2,
+                  },
+                  width: {
+                    xs: "100%",
+                    md: "auto",
+                  },
+                }}
               >
                 Deletar
               </Button>
@@ -153,21 +194,34 @@ export const CurriculumAvaliation: React.FC = () => {
                   </Button>
                 </DialogActions>
               </Dialog>
-            </>
+            </Stack>
           </Grid>
           {candidatePdf !== "" && (
             <Grid
               item
-              xs={6}
+              xs={12}
+              md={6}
               sx={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: {
+                  xs: "center",
+                  md: "flex-end",
+                },
               }}
             >
               <Download>
                 {(props: RenderDownloadProps) => {
                   return (
-                    <Button variant="contained" onClick={props.onClick}>
+                    <Button
+                      variant="contained"
+                      onClick={props.onClick}
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          md: "auto",
+                        },
+                      }}
+                    >
                       Baixar currículo
                     </Button>
                   );
