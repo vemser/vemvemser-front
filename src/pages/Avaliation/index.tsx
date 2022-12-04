@@ -67,12 +67,8 @@ export const Avaliation = () => {
     getAvaliationByEmail(data.email);
   };
 
-  useEffect(() => {
-    console.log(searcheredAvaliation);
-  }, [searcheredAvaliation]);
-
   const rows = () => {
-    if (searcheredAvaliation.length > 0) {
+    if (searcheredAvaliation.length >= 1) {
       return searcheredAvaliation?.map((avaliacao) => {
         return {
           id: avaliacao.idAvaliacao,
@@ -81,7 +77,10 @@ export const Avaliation = () => {
           emailCandidato: avaliacao.inscricao.candidato.email,
           nomeAvaliador: avaliacao.avaliador.nome,
           emailAvliador: avaliacao.avaliador.email,
-          telefoneCandidato: avaliacao.inscricao.candidato.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
+          telefoneCandidato: avaliacao.inscricao.candidato.telefone?.replace(
+            /(\d{2})(\d{5})(\d{4})/,
+            "($1) $2-$3"
+          ),
           idAvaliacao: avaliacao.idAvaliacao,
         };
       });
@@ -94,7 +93,10 @@ export const Avaliation = () => {
           emailCandidato: avaliacao.inscricao.candidato.email,
           nomeAvaliador: avaliacao.avaliador.nome,
           emailAvliador: avaliacao.avaliador.email,
-          telefoneCandidato: avaliacao.inscricao.candidato.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
+          telefoneCandidato: avaliacao.inscricao.candidato.telefone?.replace(
+            /(\d{2})(\d{5})(\d{4})/,
+            "($1) $2-$3"
+          ),
           idAvaliacao: avaliacao.idAvaliacao,
         };
       });
@@ -160,9 +162,9 @@ export const Avaliation = () => {
                 columns={columns}
                 pageSize={20}
                 onRowClick={(params) => {
-                  navigate("/subscriptions/curriculum", {
+                  navigate("/avaliations/curriculum", {
                     state: {
-                      id: params.row.id,
+                      emailCandidato: params.row.emailCandidato,
                       idAvaliacao: params.row.idAvaliacao,
                     },
                   });

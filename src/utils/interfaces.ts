@@ -157,6 +157,8 @@ export interface IAvaliationContext {
   getAvaliations: (page: number) => Promise<void>;
   getAvaliationByEmail: (email: string) => Promise<void>;
   deleteAvaliation: (idAvaliacao: number) => Promise<void>;
+  getAvaliationById: (idAvaliacao: number) => Promise<void>;
+  avaliationById: IAvaliationCandidate;
   searcheredAvaliation: IAvaliationCandidate[];
   avaliationData: IAvaliation;
 }

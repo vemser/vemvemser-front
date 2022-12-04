@@ -5,8 +5,7 @@ import {
   Paper,
   Button,
   Divider,
-  Menu,
-  MenuItem,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -38,7 +37,7 @@ export const PessoalInformation: React.FC<{
   );
 };
 
-export const Curriculum: React.FC = () => {
+export const CurriculumAvaliation: React.FC = () => {
   const getFilePluginInstance = getFilePlugin();
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const { Download } = getFilePluginInstance;
@@ -53,32 +52,13 @@ export const Curriculum: React.FC = () => {
     setOpenDelete(false);
   };
 
-  const {
-    getFormularioById,
-    getCandidateById,
-    candidatePdf,
-    candidateSelected,
-  } = useCandidates();
-  const { registerAvaliation, deleteAvaliation } = useAvaliation();
+  const { getFormularioById, candidatePdf } = useCandidates();
+  const { deleteAvaliation, getAvaliationById, avaliationById } =
+    useAvaliation();
 
   const [formattedCandidatePdf, setFormattedCandidatePdf] =
     useState<string>("null");
   const { state } = useLocation();
-
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  useEffect(() => {
-    console.log(state)
-  }, [])
-
-  const buttonAvaliar = document.querySelector("#buttonAvaliar");
 
   const base64toBlob = (data: string) => {
     const byteString = atob(data);
@@ -91,12 +71,15 @@ export const Curriculum: React.FC = () => {
   };
 
   useEffect(() => {
-    getCandidateById(state.id);
+    getAvaliationById(state.idAvaliacao);
   }, []);
 
   useEffect(() => {
-    getFormularioById(candidateSelected.candidato?.formulario?.idFormulario);
-  }, [candidateSelected]);
+    Object.keys(avaliationById).length > 0 &&
+      getFormularioById(
+        avaliationById.inscricao.candidato.formulario.idFormulario
+      );
+  }, [avaliationById]);
 
   useEffect(() => {
     const blob = base64toBlob(candidatePdf);
@@ -106,15 +89,12 @@ export const Curriculum: React.FC = () => {
   }, [candidatePdf]);
 
   useEffect(() => {
-    if (state.idAvaliacao) {
-      console.log("existe");
-    } else {
-      console.log("nao existe");
-    }
-  }, []);
+    console.log(avaliationById);
+  }, [avaliationById]);
 
-  const { candidato } = candidateSelected;
-  const formulario = candidato?.formulario;
+  const candidato = avaliationById?.inscricao.candidato;
+  const formulario = avaliationById?.inscricao.candidato.formulario;
+  console.log(candidato)
 
   return (
     <Stack
@@ -129,51 +109,13 @@ export const Curriculum: React.FC = () => {
     >
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          {candidateSelected.avaliado && (
+          {candidato && (
             <>
-              <Button
-                variant="contained"
-                disabled={candidateSelected.avaliado === "T"}
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                id="buttonAvaliar"
-                onClick={handleClick}
-              >
-                {candidateSelected.avaliado === "T" ? "Avaliado" : "Avaliar"}
-              </Button>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    registerAvaliation(true, candidateSelected.idInscricao);
-                    buttonAvaliar?.remove();
-                    handleClose();
-                  }}
-                >
-                  Aprovar
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    registerAvaliation(false, candidateSelected.idInscricao);
-                    buttonAvaliar?.remove();
-                    handleClose();
-                  }}
-                >
-                  Reprovar
-                </MenuItem>
-              </Menu>
-            </>
-          )}
-          {state.idAvaliacao && (
-            <>
+              {avaliationById?.aprovado === "T" ? (
+                <Chip label="Aprovado" color="primary" />
+              ) : (
+                <Chip label="Reprovado" color="error" variant="outlined" />
+              )}
               <Button
                 variant="contained"
                 onClick={handleClickDeleteOpen}
@@ -206,7 +148,7 @@ export const Curriculum: React.FC = () => {
                     onClick={() => {
                       handleClickDeleteClose();
 
-                      deleteAvaliation(state.idAvaliacao);
+                      deleteAvaliation(avaliationById?.idAvaliacao);
                       navigate("/avaliations");
                     }}
                     autoFocus
@@ -267,13 +209,21 @@ export const Curriculum: React.FC = () => {
                 <PessoalInformation title="Email:" value={candidato?.email} />
                 <PessoalInformation
                   title="Telefone:"
-                  value={candidato?.telefone?.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")}
+                  value={candidato?.telefone?.replace(
+                    /(\d{2})(\d{5})(\d{4})/,
+                    "($1) $2-$3"
+                  )}
                 />
                 <PessoalInformation title="CPF:" value={candidato?.cpf} />
                 <PessoalInformation title="RG:" value={candidato?.rg} />
                 <PessoalInformation
                   title="Data de Nascimento:"
-                  value={candidato?.dataNascimento?.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3/$2/$1") || "Não informado"}
+                  value={
+                    candidato?.dataNascimento?.replace(
+                      /(\d{4})-(\d{2})-(\d{2})/,
+                      "$3/$2/$1"
+                    ) || "Não informado"
+                  }
                 />
                 <PessoalInformation title="Estado:" value={candidato?.estado} />
                 <PessoalInformation title="Cidade:" value={candidato?.cidade} />

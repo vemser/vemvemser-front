@@ -17,6 +17,7 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { Recover } from "./pages/Recover";
 import { Avaliation } from "./pages/Avaliation";
 import { Perfil } from "./pages/Perfil";
+import { CurriculumAvaliation } from "./pages/CurriculumAvaliation";
 
 export const Router = () => {
   return (
@@ -43,6 +44,10 @@ export const Router = () => {
                     <Route
                       path="/subscriptions/curriculum"
                       element={<Curriculum />}
+                    />
+                    <Route
+                      path="/avaliations/curriculum"
+                      element={<CurriculumAvaliation />}
                     />
                     <Route path="/avaliations" element={<Avaliation />} />
                     <Route path="/perfil" element={<Perfil />} />
