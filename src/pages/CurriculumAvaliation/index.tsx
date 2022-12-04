@@ -88,13 +88,8 @@ export const CurriculumAvaliation: React.FC = () => {
     setFormattedCandidatePdf(url);
   }, [candidatePdf]);
 
-  useEffect(() => {
-    console.log(avaliationById);
-  }, [avaliationById]);
-
   const candidato = avaliationById?.inscricao.candidato;
   const formulario = avaliationById?.inscricao.candidato.formulario;
-  console.log(candidato)
 
   return (
     <Stack

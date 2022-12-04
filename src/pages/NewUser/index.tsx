@@ -45,8 +45,6 @@ export const NewUser: React.FC = () => {
     if (gestorLogado?.cargoDto?.idCargo !== 1) {
       navigate("/dashboard");
     }
-
-    console.log("teste");
   }, [gestorLogado]);
 
   return (

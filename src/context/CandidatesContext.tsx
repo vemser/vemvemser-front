@@ -86,9 +86,6 @@ export const CandidatesProvider = ({ children }: IChildren) => {
                         `${baseurl}/formulario/update-curriculo-by-id-formulario?idFormulario=${idFormulario}`,
                         curriculo
                       )
-                      .then((response) => {
-                        console.log("Enviou PDF:" + response);
-                      })
                       .catch((err) => {
                         console.log(err);
                       });

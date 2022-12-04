@@ -38,10 +38,6 @@ export const Recover = () => {
     loggedManager();
   }, []);
 
-  useEffect(() => {
-    console.log(gestorLogado);
-  }, [gestorLogado]);
-
   return (
     <Container
       maxWidth="sm"

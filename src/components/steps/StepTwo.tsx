@@ -47,10 +47,6 @@ export const StepTwo: React.FC<IStepProps> = ({ nextFormStep, formStep }) => {
     getTrilhas();
   }, []);
 
-  useEffect(() => {
-    console.log(trilhas);
-  }, [trilhas]);
-
   const { matriculadoBoolean, curriculo, github, linkedin } = watch();
   const curriculoIsPdf = curriculo?.[0]?.type === "application/pdf";
 
