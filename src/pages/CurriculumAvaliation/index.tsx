@@ -11,6 +11,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Skeleton,
+  Box,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useCandidates } from "../../context/CandidatesContext";
@@ -88,9 +90,6 @@ export const CurriculumAvaliation: React.FC = () => {
     setFormattedCandidatePdf(url);
   }, [candidatePdf]);
 
-  const candidato = avaliationById?.inscricao.candidato;
-  const formulario = avaliationById?.inscricao.candidato.formulario;
-
   return (
     <Stack
       direction={{
@@ -102,9 +101,9 @@ export const CurriculumAvaliation: React.FC = () => {
       maxWidth="lg"
       m="0 auto"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          {candidato && (
+      {Object.keys(avaliationById).length > 0 ? (
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
             <>
               {avaliationById?.aprovado === "T" ? (
                 <Chip label="Aprovado" color="primary" />
@@ -155,193 +154,281 @@ export const CurriculumAvaliation: React.FC = () => {
                 </DialogActions>
               </Dialog>
             </>
+          </Grid>
+          {candidatePdf !== "" && (
+            <Grid
+              item
+              xs={6}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Download>
+                {(props: RenderDownloadProps) => {
+                  return (
+                    <Button variant="contained" onClick={props.onClick}>
+                      Baixar currículo
+                    </Button>
+                  );
+                }}
+              </Download>
+            </Grid>
           )}
-        </Grid>
-        {candidatePdf !== "" && (
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
           <Grid
-            item
-            xs={6}
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Download>
-              {(props: RenderDownloadProps) => {
-                return (
-                  <Button variant="contained" onClick={props.onClick}>
-                    Baixar currículo
-                  </Button>
-                );
-              }}
-            </Download>
-          </Grid>
-        )}
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid
-          container
-          item
-          xs={12}
-          md={candidatePdf !== "" ? 5 : 12}
-          spacing={2}
-        >
-          <Grid item xs={12} md={12}>
-            <Typography variant="h6" gutterBottom>
-              Informações Pessoais
-            </Typography>
-            <Paper
-              elevation={1}
-              sx={{
-                p: {
-                  xs: 2,
-                },
-              }}
-            >
-              <Grid container spacing={1}>
-                <PessoalInformation title="Nome:" value={candidato?.nome} />
-                <PessoalInformation title="Email:" value={candidato?.email} />
-                <PessoalInformation
-                  title="Telefone:"
-                  value={candidato?.telefone?.replace(
-                    /(\d{2})(\d{5})(\d{4})/,
-                    "($1) $2-$3"
-                  )}
-                />
-                <PessoalInformation title="CPF:" value={candidato?.cpf} />
-                <PessoalInformation title="RG:" value={candidato?.rg} />
-                <PessoalInformation
-                  title="Data de Nascimento:"
-                  value={
-                    candidato?.dataNascimento?.replace(
-                      /(\d{4})-(\d{2})-(\d{2})/,
-                      "$3/$2/$1"
-                    ) || "Não informado"
-                  }
-                />
-                <PessoalInformation title="Estado:" value={candidato?.estado} />
-                <PessoalInformation title="Cidade:" value={candidato?.cidade} />
-                <PessoalInformation
-                  title="Deficiência:"
-                  value={candidato?.pcd === "F" ? "Não possui" : candidato?.pcd}
-                />
-              </Grid>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <Typography variant="h6" gutterBottom>
-              Formulário
-            </Typography>
-            <Paper
-              elevation={1}
-              sx={{
-                p: {
-                  xs: 2,
-                },
-              }}
-            >
-              <Grid container spacing={1}>
-                <PessoalInformation title="Matriculado:" value="Sim" />
-                <PessoalInformation title="Curso:" value={formulario?.curso} />
-                <PessoalInformation title="Turno:" value="Noite" />
-                <PessoalInformation
-                  title="Instituição"
-                  value={formulario?.instituicao}
-                />
-                <PessoalInformation
-                  title="Nível de inglês:"
-                  value={formulario?.ingles}
-                />
-                <PessoalInformation
-                  title="Nível de espanhol:"
-                  value={formulario?.espanhol}
-                />
-                <PessoalInformation title="Neurodiversidade:" value="Não" />
-                <PessoalInformation
-                  title="Orientação sexual:"
-                  value={formulario?.orientacao}
-                />
-                <PessoalInformation
-                  title="Gênero:"
-                  value={formulario?.genero}
-                />
-                <PessoalInformation
-                  title="Motivo:"
-                  value={formulario?.resposta}
-                />
-                <PessoalInformation
-                  title="Gosta de desafios:"
-                  value={formulario?.desafios === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Gosta de resolver problemas:"
-                  value={formulario?.problemas === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Gosta do reconhecimento da área:"
-                  value={formulario?.reconhecimento === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Quer ajudar as pessoas:"
-                  value={formulario?.altruismo === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Conhecimentos básicos:"
-                  value={formulario?.prova === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Disponibilidade de trabalho:"
-                  value={formulario?.efetivacao === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Disponibilidade de estudo:"
-                  value={formulario?.disponibilidade === "F" ? "Não" : "Sim"}
-                />
-                <PessoalInformation
-                  title="Trilhas:"
-                  value={formulario?.trilhas
-                    .map((trilha: ITrilhas) => trilha.nome)
-                    .join(", ")}
-                />
-                <PessoalInformation
-                  title="Hardware:"
-                  value={formulario?.configuracoes}
-                />
-                <PessoalInformation
-                  title="Linkedin:"
-                  value={formulario?.linkedin}
-                />
-                <PessoalInformation
-                  title="Github:"
-                  value={formulario?.github}
-                />
-                <PessoalInformation
-                  title="LGPD:"
-                  value={formulario?.lgpdBoolean === "F" ? "Não" : "Sim"}
-                />
-              </Grid>
-            </Paper>
-          </Grid>
-        </Grid>
-        {candidatePdf !== "" && (
-          <Grid
+            container
             item
             xs={12}
-            md={7}
-            sx={{
-              width: "100%",
-            }}
+            md={candidatePdf !== "" ? 5 : 12}
+            spacing={2}
           >
-            <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf.worker.min.js">
-              <Viewer
-                fileUrl={formattedCandidatePdf}
-                plugins={[getFilePluginInstance, defaultLayoutPluginInstance]}
-              />
-            </Worker>
+            <Grid item xs={12} md={12}>
+              <Typography variant="h6" gutterBottom>
+                Informações Pessoais
+              </Typography>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: {
+                    xs: 2,
+                  },
+                }}
+              >
+                <Grid container spacing={1}>
+                  <PessoalInformation
+                    title="Nome:"
+                    value={avaliationById.inscricao.candidato.nome}
+                  />
+                  <PessoalInformation
+                    title="Email:"
+                    value={avaliationById.inscricao.candidato.email}
+                  />
+                  <PessoalInformation
+                    title="Telefone:"
+                    value={avaliationById.inscricao.candidato.telefone?.replace(
+                      /(\d{2})(\d{5})(\d{4})/,
+                      "($1) $2-$3"
+                    )}
+                  />
+                  <PessoalInformation
+                    title="CPF:"
+                    value={avaliationById.inscricao.candidato.cpf}
+                  />
+                  <PessoalInformation
+                    title="RG:"
+                    value={avaliationById.inscricao.candidato.rg}
+                  />
+                  <PessoalInformation
+                    title="Data de Nascimento:"
+                    value={
+                      avaliationById.inscricao.candidato.dataNascimento?.replace(
+                        /(\d{4})-(\d{2})-(\d{2})/,
+                        "$3/$2/$1"
+                      ) || "Não informado"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Estado:"
+                    value={avaliationById.inscricao.candidato.estado}
+                  />
+                  <PessoalInformation
+                    title="Cidade:"
+                    value={avaliationById.inscricao.candidato.cidade}
+                  />
+                  <PessoalInformation
+                    title="Deficiência:"
+                    value={
+                      avaliationById.inscricao.candidato.pcd === "F"
+                        ? "Não possui"
+                        : avaliationById.inscricao.candidato.pcd
+                    }
+                  />
+                </Grid>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Typography variant="h6" gutterBottom>
+                Formulário
+              </Typography>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: {
+                    xs: 2,
+                  },
+                }}
+              >
+                <Grid container spacing={1}>
+                  <PessoalInformation title="Matriculado:" value="Sim" />
+                  <PessoalInformation
+                    title="Curso:"
+                    value={avaliationById.inscricao.candidato.formulario.curso}
+                  />
+                  <PessoalInformation title="Turno:" value="Noite" />
+                  <PessoalInformation
+                    title="Instituição"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.instituicao
+                    }
+                  />
+                  <PessoalInformation
+                    title="Nível de inglês:"
+                    value={avaliationById.inscricao.candidato.formulario.ingles}
+                  />
+                  <PessoalInformation
+                    title="Nível de espanhol:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.espanhol
+                    }
+                  />
+                  <PessoalInformation title="Neurodiversidade:" value="Não" />
+                  <PessoalInformation
+                    title="Orientação sexual:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.orientacao
+                    }
+                  />
+                  <PessoalInformation
+                    title="Gênero:"
+                    value={avaliationById.inscricao.candidato.formulario.genero}
+                  />
+                  <PessoalInformation
+                    title="Motivo:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.resposta
+                    }
+                  />
+                  <PessoalInformation
+                    title="Gosta de desafios:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.desafios ===
+                      "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Gosta de resolver problemas:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .problemas === "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Gosta do reconhecimento da área:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .reconhecimento === "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Quer ajudar as pessoas:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .altruismo === "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Conhecimentos básicos:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.prova ===
+                      "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Disponibilidade de trabalho:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .efetivacao === "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Disponibilidade de estudo:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .disponibilidade === "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                  <PessoalInformation
+                    title="Trilhas:"
+                    value={avaliationById.inscricao.candidato.formulario.trilhas
+                      .map((trilha: ITrilhas) => trilha.nome)
+                      .join(", ")}
+                  />
+                  <PessoalInformation
+                    title="Hardware:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .configuracoes
+                    }
+                  />
+                  <PessoalInformation
+                    title="Linkedin:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario.linkedin
+                    }
+                  />
+                  <PessoalInformation
+                    title="Github:"
+                    value={avaliationById.inscricao.candidato.formulario.github}
+                  />
+                  <PessoalInformation
+                    title="LGPD:"
+                    value={
+                      avaliationById.inscricao.candidato.formulario
+                        .lgpdBoolean === "F"
+                        ? "Não"
+                        : "Sim"
+                    }
+                  />
+                </Grid>
+              </Paper>
+            </Grid>
           </Grid>
-        )}
-      </Grid>
+          {candidatePdf !== "" && (
+            <Grid
+              item
+              xs={12}
+              md={7}
+              sx={{
+                width: "100%",
+              }}
+            >
+              <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf.worker.min.js">
+                <Viewer
+                  fileUrl={formattedCandidatePdf}
+                  plugins={[getFilePluginInstance, defaultLayoutPluginInstance]}
+                />
+              </Worker>
+            </Grid>
+          )}
+        </Grid>
+      ) : (
+        <Box sx={{ width: "100%" }}>
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            sx={{
+              height: "calc(100vh - 114px)",
+            }}
+          />
+        </Box>
+      )}
     </Stack>
   );
 };
