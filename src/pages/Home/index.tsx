@@ -120,6 +120,9 @@ export const Home: React.FC = () => {
                 id="login"
                 onSubmit={handleSubmit(handleLogin)}
               >
+                <Typography variant="h6" gutterBottom>
+                  Área do Gestor
+                </Typography>
                 <TextField
                   id="home-email"
                   error={!!errors.email}
